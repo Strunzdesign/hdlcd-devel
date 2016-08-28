@@ -1,13 +1,25 @@
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-find_package(Boost REQUIRED COMPONENTS system signals)
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+cmake_minimum_required(VERSION 2.6)
 
-install(FILES
-    HdlcdAccessClient.h
-    HdlcdPacketCtrl.h
-    HdlcdPacketData.h
-    HdlcdPacketEndpoint.h
-    HdlcdPacket.h
-DESTINATION include)
+project(hdlcd-devel)
+
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+else()
+    message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
+endif()
+
+# Automatically set the version number
+set(HDLCD_DEVEL_VERSION_MAJOR  \"1\")
+set(HDLCD_DEVEL_VERSION_MINOR  \"3pre\")
+include_directories("${PROJECT_BINARY_DIR}/src")
+configure_file (
+    "${PROJECT_SOURCE_DIR}/src/HdlcdConfig.h.in"
+    "${PROJECT_SOURCE_DIR}/src/HdlcdConfig.h"
+)
+
+add_subdirectory(src)
