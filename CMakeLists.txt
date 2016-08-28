@@ -15,7 +15,7 @@ endif()
 
 # Automatically set the version number
 set(HDLCD_DEVEL_VERSION_MAJOR  \"1\")
-set(HDLCD_DEVEL_VERSION_MINOR  \"3pre\")
+set(HDLCD_DEVEL_VERSION_MINOR  \"0pre\")
 include_directories("${PROJECT_BINARY_DIR}/src")
 configure_file (
     "${PROJECT_SOURCE_DIR}/src/HdlcdConfig.h.in"
