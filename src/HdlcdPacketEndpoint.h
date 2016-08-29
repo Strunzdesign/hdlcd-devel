@@ -37,7 +37,6 @@
 #ifndef HDLCD_PACKET_ENDPOINT_H
 #define HDLCD_PACKET_ENDPOINT_H
 
-#include "HdlcdConfig.h"
 #include <deque>
 #include <iostream>
 #include <memory>

@@ -37,7 +37,6 @@
 #ifndef HDLCD_ACCESS_CLIENT_H
 #define HDLCD_ACCESS_CLIENT_H
 
-#include "HdlcdConfig.h"
 #include <boost/asio.hpp>
 #include <vector>
 #include <string>

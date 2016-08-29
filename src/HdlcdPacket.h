@@ -37,7 +37,6 @@
 #ifndef HDLCD_PACKET_H
 #define HDLCD_PACKET_H
 
-#include "HdlcdConfig.h"
 #include <vector>
 
 class HdlcdPacket {

@@ -37,7 +37,6 @@
 #ifndef HDLCD_PACKET_CTRL_H
 #define HDLCD_PACKET_CTRL_H
 
-#include "HdlcdConfig.h"
 #include <memory>
 #include "HdlcdPacket.h"
 
