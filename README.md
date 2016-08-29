@@ -1,5 +1,5 @@
 # The header files for the HDLC Daemon (HDLCd)
-Header files tools required to build the HDLC Daemon and its clients.
+The header files required to build the HDLC Daemon and its clients.
 
 This software is intended to be portable and makes use of the boost libraries. It was tested on GNU/Linux (GCC toolchain)
 and Microsoft Windows (nuwen MinGW).
@@ -10,7 +10,7 @@ seperate repositories:
 - https://github.com/Strunzdesign/hdlcd-tools
 - https://github.com/Strunzdesign/snet-tools
 
-Stable releases of the HDLCd:
+Stable releases of the HDLCd include files:
 - none yet
 
 Current state:
