@@ -18,3 +18,5 @@ Current state:
 
 Required libraries and tools:
 - None. This repository does only contain C++ header files.
+
+See online doxygen documentation at https://strunzdesign.github.io/hdlcd-devel/
