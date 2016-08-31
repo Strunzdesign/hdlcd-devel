@@ -54,6 +54,7 @@ public:
         m_bStarted = false;
         m_bStopped = false;
         m_bReceiving = false;
+        m_SendBufferOffset = 0;
     }
     
     ~HdlcdPacketEndpoint() {
@@ -98,7 +99,7 @@ public:
         
         m_SendQueue.emplace_back(std::make_pair(std::move(a_Packet->Serialize()), a_OnSendDoneCallback));
         if ((!m_bWriteInProgress) && (!m_SendQueue.empty()) && (m_SEPState == SEPSTATE_CONNECTED)) {
-            do_write();
+            DoWrite();
         } // if
         
         return true;
@@ -110,12 +111,13 @@ public:
         assert(m_SEPState == SEPSTATE_DISCONNECTED);
         assert(m_bWriteInProgress == false);
         assert(m_bReceiving == false);
+        m_SendBufferOffset = 0;
         m_bStarted = true;
         m_SEPState = SEPSTATE_CONNECTED;
         TriggerNextDataPacket();
         StartKeepAliveTimer();
         if (!m_SendQueue.empty()) {
-            do_write();
+            DoWrite();
         } // if
     }
 
@@ -162,7 +164,7 @@ private:
                     StartKeepAliveTimer();
                 } // if
             } // if
-        });
+        }); // async_wait
     }
 
     void ReadType() {
@@ -200,7 +202,7 @@ private:
             } // switch
             
             ReadRemainingBytes();
-        });
+        }); // async_read
     }
     
     void ReadRemainingBytes() {
@@ -225,7 +227,7 @@ private:
                     std::cerr << "TCP read error!" << std::endl;
                     Close();
                 } // else
-            });
+            }); // async_read
         } else {
             // Reception completed, deliver packet
             auto l_PacketData = std::dynamic_pointer_cast<HdlcdPacketData>(m_IncomingPacket);
@@ -259,36 +261,44 @@ private:
         } // else
     }
 
-    void do_write() {
+    void DoWrite() {
         auto self(shared_from_this());
         if (m_bStopped) return;
         m_bWriteInProgress = true;
-        boost::asio::async_write(m_TCPSocket, boost::asio::buffer(m_SendQueue.front().first.data(), m_SendQueue.front().first.size()),
+        boost::asio::async_write(m_TCPSocket, boost::asio::buffer(&(m_SendQueue.front().first.data()[m_SendBufferOffset]), (m_SendQueue.front().first.size() - m_SendBufferOffset)),
                                  [this, self](boost::system::error_code a_ErrorCode, std::size_t a_BytesSent) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (m_bStopped) return;
             if (!a_ErrorCode) {
-                // If a callback was provided, call it now to demand for a subsequent packet
-                if (m_SendQueue.front().second) {
-                    m_SendQueue.front().second();
-                } // if
-
-                m_SendQueue.pop_front();
-                if (!m_SendQueue.empty()) {
-                    do_write();
-                } else {
-                    m_bWriteInProgress = false;
-                    if (m_bShutdown) {
-                        m_SEPState = SEPSTATE_SHUTDOWN;
-                        m_TCPSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-                        Close();
+                m_SendBufferOffset += a_BytesSent;
+                if (m_SendBufferOffset == m_SendQueue.front().first.size()) {
+                    // Completed transmission. If a callback was provided, call it now to demand for a subsequent packet
+                    if (m_SendQueue.front().second) {
+                        m_SendQueue.front().second();
                     } // if
+
+                    // Remove transmitted packet
+                    m_SendQueue.pop_front();
+                    m_SendBufferOffset = 0;
+                    if (!m_SendQueue.empty()) {
+                        DoWrite();
+                    } else {
+                        m_bWriteInProgress = false;
+                        if (m_bShutdown) {
+                            m_SEPState = SEPSTATE_SHUTDOWN;
+                            m_TCPSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+                            Close();
+                        } // if
+                    } // else
+                } else {
+                    // Only a partial transmission. We are not done yet.
+                    DoWrite();
                 } // else
             } else {
                 std::cerr << "TCP write error!" << std::endl;
                 Close();
-            }
-        });
+            } // else
+        }); // async_write
     }
 
 private:
@@ -300,6 +310,7 @@ private:
     boost::asio::ip::tcp::socket &m_TCPSocket;
     std::shared_ptr<HdlcdPacket> m_IncomingPacket;
     std::deque<std::pair<std::vector<unsigned char>, std::function<void()>>> m_SendQueue; // To be transmitted
+    size_t m_SendBufferOffset; //!< To detect and handle partial writes to the TCP socket
     bool m_bWriteInProgress;
     enum { max_length = 65535 };
     unsigned char m_ReadBuffer[max_length];
