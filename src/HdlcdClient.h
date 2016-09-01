@@ -1,5 +1,5 @@
 /**
- * \file      HdlcdAccessClient.h
+ * \file      HdlcdClient.h
  * \brief 
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
@@ -34,8 +34,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef HDLCD_ACCESS_CLIENT_H
-#define HDLCD_ACCESS_CLIENT_H
+#ifndef HDLCD_CLIENT_H
+#define HDLCD_CLIENT_H
 
 #include <boost/asio.hpp>
 #include <vector>
@@ -44,14 +44,14 @@
 #include "HdlcdPacketData.h"
 #include "HdlcdPacketCtrl.h"
 
-/*! \class HdlcdAccessClient
- *  \brief Class HdlcdAccessClient
+/*! \class HdlcdClient
+ *  \brief Class HdlcdClient
  * 
  *  The main helper class to easily implement clients of the HDLCd access protocol
  */
-class HdlcdAccessClient {
+class HdlcdClient {
 public:
-    /*! \brief The constructor of HdlcdAccessClient objects
+    /*! \brief The constructor of HdlcdClient objects
      * 
      *  The connection is established on instantiation (RAII)
      * 
@@ -60,7 +60,7 @@ public:
      *  \param a_SerialPortName the name of the serial port device
      *  \param a_SAP the numerical indentifier of the service access protocol
      */
-    HdlcdAccessClient(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::string a_SerialPortName, unsigned char a_SAP):
+    HdlcdClient(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::string a_SerialPortName, unsigned char a_SAP):
         m_bClosed(false),
         m_TCPDataSocket(a_IOService),
         m_TCPCtrlSocket(a_IOService),
@@ -104,11 +104,11 @@ public:
         });
     }
 
-    /*! \brief The destructor of AccessClient objects
+    /*! \brief The destructor of HdlcdClient objects
      * 
      *  All open connections will automatically be closed by the destructor
      */
-    ~HdlcdAccessClient() {
+    ~HdlcdClient() {
         m_OnDataCallback = NULL;
         m_OnCtrlCallback = NULL;
         m_OnClosedCallback = NULL;
@@ -310,4 +310,4 @@ private:
     std::function<void()> m_OnClosedCallback;  //!< The callback function that is invoked if the either this endpoint or that of the peer goes down
 };
 
-#endif // HDLCD_ACCESS_CLIENT_H
+#endif // HDLCD_CLIENT_H

@@ -47,7 +47,7 @@
 
 class HdlcdPacketEndpoint: public std::enable_shared_from_this<HdlcdPacketEndpoint> {
 public:
-    HdlcdPacketEndpoint(boost::asio::ip::tcp::socket& a_TCPSocket): m_KeepAliveTimer(a_TCPSocket.get_io_service()), m_TCPSocket(a_TCPSocket) {
+    HdlcdPacketEndpoint(boost::asio::ip::tcp::socket& a_TCPSocket): m_TCPSocket(a_TCPSocket), m_KeepAliveTimer(a_TCPSocket.get_io_service()) {
         m_SEPState = SEPSTATE_DISCONNECTED;
         m_bWriteInProgress = false;
         m_bShutdown = false;
