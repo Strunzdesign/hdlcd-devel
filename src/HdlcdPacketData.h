@@ -54,7 +54,7 @@ public:
     static std::shared_ptr<HdlcdPacketData> CreateDeserializedPacket(unsigned char a_Type) {
         // Called on reception: evaluate type field
         auto l_PacketData(std::shared_ptr<HdlcdPacketData>(new HdlcdPacketData));
-        bool l_bReserved = (a_Type & 0x08); // TODO: abort if set
+        //bool l_bReserved = (a_Type & 0x08); // TODO: abort if set
         l_PacketData->m_bReliable = (a_Type & 0x04);
         l_PacketData->m_bInvalid  = (a_Type & 0x02);
         l_PacketData->m_bWasSent  = (a_Type & 0x01);
@@ -96,12 +96,12 @@ private:
         l_Buffer.emplace_back(l_Type);
         
         // Prepare length field
-        l_Buffer.emplace_back((htons(m_Payload.size()) >> 0) & 0x00FF);
-        l_Buffer.emplace_back((htons(m_Payload.size()) >> 8) & 0x00FF);
+        l_Buffer.emplace_back((m_Payload.size() >> 8) & 0x00FF);
+        l_Buffer.emplace_back((m_Payload.size() >> 0) & 0x00FF);
         
         // Add payload
         l_Buffer.insert(l_Buffer.end(), m_Payload.begin(), m_Payload.end());
-        return std::move(l_Buffer);
+        return l_Buffer;
     }
     
     size_t BytesNeeded() const {
