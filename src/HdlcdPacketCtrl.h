@@ -37,8 +37,8 @@
 #ifndef HDLCD_PACKET_CTRL_H
 #define HDLCD_PACKET_CTRL_H
 
-#include <memory>
 #include "HdlcdPacket.h"
+#include <memory>
 
 class HdlcdPacketCtrl: public HdlcdPacket {
 public:
@@ -98,35 +98,30 @@ public:
     // Getters
     E_CTRL_TYPE GetPacketType() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         return m_eCtrlType;
     }
 
     bool GetIsAlive() const {
         assert(m_eCtrlType == CTRL_TYPE_PORT_STATUS);
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         return m_bAlive;
     }
 
     bool GetIsLockedByOthers() const {
         assert(m_eCtrlType == CTRL_TYPE_PORT_STATUS);
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         return m_bLockedByOthers;
     }
 
     bool GetIsLockedBySelf() const {
         assert(m_eCtrlType == CTRL_TYPE_PORT_STATUS);
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         return m_bLockedBySelf;
     }
 
     bool GetDesiredLockState() const {
         assert(m_eCtrlType == CTRL_TYPE_PORT_STATUS);
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         return m_bLockSerialPort;
     }
 
@@ -139,13 +134,14 @@ private:
         m_bLockSerialPort = false;
         m_eCtrlType = CTRL_TYPE_UNSET;
         m_eDeserialize = DESERIALIZE_FULL;
-        m_BytesRemaining = 0;
     }
+    
+    // Internal helpers
+    E_HDLCD_PACKET GetHdlcdPacketType() const { return HDLCD_PACKET_CTRL; }
 
     // Serializer and deserializer
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         std::vector<unsigned char> l_Buffer;
         l_Buffer.emplace_back(0x10);
         
@@ -173,22 +169,23 @@ private:
         } // switch
 
         l_Buffer.emplace_back(l_Control);
-        return std::move(l_Buffer);
-    }
-    
-    size_t BytesNeeded() const {
-        return m_BytesRemaining;
+        return l_Buffer;
     }
     
     bool BytesReceived(const unsigned char *a_ReadBuffer, size_t a_BytesRead) {
+        if (Frame::BytesReceived(a_ReadBuffer, a_BytesRead)) {
+            // Subsequent bytes are required
+            return true; // no error (yet)
+        } // if
+
+        // All requested bytes are available
         switch (m_eDeserialize) {
         case DESERIALIZE_CTRL: {
-            // Read control byte
-            assert(m_BytesRemaining == 1);
-            assert(a_BytesRead == 1);
-            
-            // Parse control byte
-            const unsigned char &l_Control = a_ReadBuffer[0];
+            // Deserialize the control byte
+            assert(m_Payload.size() == 1);
+            const unsigned char &l_Control = m_Payload[0];
+            m_Payload.clear();
+
             switch (l_Control & 0xF0) {
             case 0x00: {
                 m_eCtrlType = CTRL_TYPE_PORT_STATUS;
@@ -213,11 +210,11 @@ private:
                 break;
             }
             default:
-                // Unknown. TODO: check
-                m_eCtrlType = CTRL_TYPE_UNSET;
+                m_eDeserialize = DESERIALIZE_ERROR;
+                return false;
             } // switch
-            
-            m_BytesRemaining = 0;
+
+            // Read of control packet completed
             m_eDeserialize = DESERIALIZE_FULL;
             break;
         }
@@ -226,7 +223,8 @@ private:
             assert(false);
         } // switch
         
-        return (true); // no error
+        // No error, maybe subsequent bytes are required
+        return true;
     }
 
     // Members
@@ -237,11 +235,11 @@ private:
     
     E_CTRL_TYPE m_eCtrlType;
     typedef enum {
-        DESERIALIZE_CTRL = 0,
-        DESERIALIZE_FULL = 1
+        DESERIALIZE_ERROR = 0,
+        DESERIALIZE_CTRL  = 1,
+        DESERIALIZE_FULL  = 2
     } E_DESERIALIZE;
     E_DESERIALIZE m_eDeserialize;
-    size_t m_BytesRemaining;
 };
 
 #endif // HDLCD_PACKET_CTRL_H

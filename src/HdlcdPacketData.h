@@ -38,6 +38,7 @@
 #define HDLCD_PACKET_DATA_H
 
 #include "HdlcdPacket.h"
+#include <memory>
 
 class HdlcdPacketData: public HdlcdPacket {
 public:
@@ -68,9 +69,20 @@ public:
         return m_Payload;
     }
     
-    bool GetReliable() const { return m_bReliable; }
-    bool GetInvalid()  const { return m_bInvalid; }
-    bool GetWasSent()  const { return m_bWasSent; }
+    bool GetReliable() const {
+        assert(m_eDeserialize == DESERIALIZE_FULL);
+        return m_bReliable;
+    }
+    
+    bool GetInvalid() const {
+        assert(m_eDeserialize == DESERIALIZE_FULL);
+        return m_bInvalid;
+    }
+    
+    bool GetWasSent() const {
+        assert(m_eDeserialize == DESERIALIZE_FULL);
+        return m_bWasSent;
+    }
     
 private:
     // Private CTOR
@@ -79,13 +91,14 @@ private:
         m_bInvalid = false;
         m_bWasSent = false;
         m_eDeserialize = DESERIALIZE_FULL;
-        m_BytesRemaining = 0;
     }
+    
+    // Internal helpers
+    E_HDLCD_PACKET GetHdlcdPacketType() const { return HDLCD_PACKET_DATA; }
 
     // Serializer and deserializer
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        assert(m_BytesRemaining == 0);
         std::vector<unsigned char> l_Buffer;
         
         // Prepare type field
@@ -104,37 +117,31 @@ private:
         return l_Buffer;
     }
     
-    size_t BytesNeeded() const {
-        return m_BytesRemaining;
-    }
-    
     bool BytesReceived(const unsigned char *a_ReadBuffer, size_t a_BytesRead) {
+        if (Frame::BytesReceived(a_ReadBuffer, a_BytesRead)) {
+            // Subsequent bytes are required
+            return true; // no error (yet)
+        } // if
+        
+        // All requested bytes are available
         switch (m_eDeserialize) {
         case DESERIALIZE_SIZE: {
-            // Read length field
-            assert((m_BytesRemaining > 0) && (m_BytesRemaining <= 2));
-            assert(a_BytesRead);
-            assert(a_BytesRead == 2); // TODO: dirty, might break!
-            assert(m_Payload.empty());
-            m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(a_ReadBuffer)));
+            // Deserialize the length field
+            assert(m_Payload.size() == 2);
+            m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(&m_Payload[0])));
+            m_Payload.clear();
             if (m_BytesRemaining) {
                 m_eDeserialize = DESERIALIZE_DATA;
             } else {
+                // An empty data packet... may happen
                 m_eDeserialize = DESERIALIZE_FULL;
             } // else
 
             break;
         }
         case DESERIALIZE_DATA: {
-            // Read payload
-            assert(m_BytesRemaining <= a_BytesRead);
-            assert(a_BytesRead);
-            m_Payload.insert(m_Payload.end(), a_ReadBuffer, (a_ReadBuffer + a_BytesRead));
-            m_BytesRemaining -= a_BytesRead;
-            if (m_BytesRemaining == 0) {
-                m_eDeserialize = DESERIALIZE_FULL;
-            } // if
-
+            // Read of payload completed
+            m_eDeserialize = DESERIALIZE_FULL;
             break;
         }
         case DESERIALIZE_FULL:
@@ -142,21 +149,21 @@ private:
             assert(false);
         } // switch
         
-        return (true); // no error
+        // No error, maybe subsequent bytes are required
+        return true;
     }
     
     // Members
-    std::vector<unsigned char> m_Payload;
     bool m_bReliable;
     bool m_bInvalid;
     bool m_bWasSent;
     typedef enum {
-        DESERIALIZE_SIZE = 0,
-        DESERIALIZE_DATA = 1,
-        DESERIALIZE_FULL = 2
+        DESERIALIZE_ERROR = 0,
+        DESERIALIZE_SIZE  = 1,
+        DESERIALIZE_DATA  = 2,
+        DESERIALIZE_FULL  = 3
     } E_DESERIALIZE;
     E_DESERIALIZE m_eDeserialize;
-    size_t m_BytesRemaining;
 };
 
 #endif // HDLCD_PACKET_DATA_H

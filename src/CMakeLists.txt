@@ -5,10 +5,11 @@ find_package(Boost REQUIRED COMPONENTS system)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 install(FILES
+    Frame.h
     HdlcdClient.h
     HdlcdConfig.h
+    HdlcdPacket.h
     HdlcdPacketCtrl.h
     HdlcdPacketData.h
     HdlcdPacketEndpoint.h
-    HdlcdPacket.h
 DESTINATION include)
