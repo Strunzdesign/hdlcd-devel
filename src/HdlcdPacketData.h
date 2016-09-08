@@ -117,7 +117,12 @@ private:
             assert(a_BytesRead == 2); // TODO: dirty, might break!
             assert(m_Payload.empty());
             m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(a_ReadBuffer)));
-            m_eDeserialize = DESERIALIZE_DATA;
+            if (m_BytesRemaining) {
+                m_eDeserialize = DESERIALIZE_DATA;
+            } else {
+                m_eDeserialize = DESERIALIZE_FULL;
+            } // else
+
             break;
         }
         case DESERIALIZE_DATA: {
