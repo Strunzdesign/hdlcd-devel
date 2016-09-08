@@ -1,12 +1,13 @@
 var dir_68267d1309a1af8e8297ef4c3efbcdba =
 [
-    [ "HdlcdAccessClient.h", "HdlcdAccessClient_8h.html", [
-      [ "HdlcdAccessClient", "classHdlcdAccessClient.html", "classHdlcdAccessClient" ]
+    [ "Frame.h", "Frame_8h.html", [
+      [ "Frame", "classFrame.html", "classFrame" ]
+    ] ],
+    [ "HdlcdClient.h", "HdlcdClient_8h.html", [
+      [ "HdlcdClient", "classHdlcdClient.html", "classHdlcdClient" ]
     ] ],
     [ "HdlcdConfig.h", "HdlcdConfig_8h.html", "HdlcdConfig_8h" ],
-    [ "HdlcdPacket.h", "HdlcdPacket_8h.html", [
-      [ "HdlcdPacket", "classHdlcdPacket.html", "classHdlcdPacket" ]
-    ] ],
+    [ "HdlcdPacket.h", "HdlcdPacket_8h.html", "HdlcdPacket_8h" ],
     [ "HdlcdPacketCtrl.h", "HdlcdPacketCtrl_8h.html", [
       [ "HdlcdPacketCtrl", "classHdlcdPacketCtrl.html", "classHdlcdPacketCtrl" ]
     ] ],

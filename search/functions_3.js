@@ -1,6 +1,13 @@
 var searchData=
 [
-  ['hdlcdaccessclient',['HdlcdAccessClient',['../classHdlcdAccessClient.html#a3e8c5fc1ed62113c0e3318d4de57229f',1,'HdlcdAccessClient']]],
-  ['hdlcdpacket',['HdlcdPacket',['../classHdlcdPacket.html#a679019ade5ea77f19ecab13c484c2b1d',1,'HdlcdPacket']]],
-  ['hdlcdpacketendpoint',['HdlcdPacketEndpoint',['../classHdlcdPacketEndpoint.html#aaa32185671678035f53cdc784ce90074',1,'HdlcdPacketEndpoint']]]
+  ['getdata',['GetData',['../classHdlcdPacketData.html#abc690e2d3d84998df23221f10f893f81',1,'HdlcdPacketData']]],
+  ['getdesiredlockstate',['GetDesiredLockState',['../classHdlcdPacketCtrl.html#addd115864ff204e792b2a2ba705b614d',1,'HdlcdPacketCtrl']]],
+  ['gethdlcdpackettype',['GetHdlcdPacketType',['../classHdlcdPacket.html#add280d6f20d1ba0b204eb9fc04280c44',1,'HdlcdPacket']]],
+  ['getinvalid',['GetInvalid',['../classHdlcdPacketData.html#a8797aee7e556ae194f9a3a12e1900895',1,'HdlcdPacketData']]],
+  ['getisalive',['GetIsAlive',['../classHdlcdPacketCtrl.html#a12fc2b37905df9cbcaa84a9bee84fc1a',1,'HdlcdPacketCtrl']]],
+  ['getislockedbyothers',['GetIsLockedByOthers',['../classHdlcdPacketCtrl.html#a128533b3f7e1d3d9386055171b227e80',1,'HdlcdPacketCtrl']]],
+  ['getislockedbyself',['GetIsLockedBySelf',['../classHdlcdPacketCtrl.html#a00bca303fa168370388c078edd041e60',1,'HdlcdPacketCtrl']]],
+  ['getpackettype',['GetPacketType',['../classHdlcdPacketCtrl.html#a8f4d35576f4ed5163ef49f8eb5f4d37d',1,'HdlcdPacketCtrl']]],
+  ['getreliable',['GetReliable',['../classHdlcdPacketData.html#a8507220f68c484c80527e708a85d0034',1,'HdlcdPacketData']]],
+  ['getwassent',['GetWasSent',['../classHdlcdPacketData.html#a3e3ed17e50f5689f9f044c62582f3194',1,'HdlcdPacketData']]]
 ];

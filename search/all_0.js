@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['bytesneeded',['BytesNeeded',['../classHdlcdPacket.html#aae85f09faf969d6ad8e1257e17d2a028',1,'HdlcdPacket']]],
-  ['bytesreceived',['BytesReceived',['../classHdlcdPacket.html#a79d6ad4b1556d89a79dddd2326d3c03c',1,'HdlcdPacket']]]
+  ['bytesneeded',['BytesNeeded',['../classFrame.html#ae5d4b218c9e23d41b48a688bdf4c63e8',1,'Frame']]],
+  ['bytesreceived',['BytesReceived',['../classFrame.html#a1e28f1bdc7eea632f638247c73caa9d6',1,'Frame']]]
 ];

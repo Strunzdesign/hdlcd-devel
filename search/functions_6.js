@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['wasstarted',['WasStarted',['../classHdlcdPacketEndpoint.html#a490ba6f53fdc047a696959b63f7ec711',1,'HdlcdPacketEndpoint']]]
+  ['triggernextdatapacket',['TriggerNextDataPacket',['../classHdlcdPacketEndpoint.html#a3f035e49735765d15b7a4156f10062a1',1,'HdlcdPacketEndpoint']]]
 ];

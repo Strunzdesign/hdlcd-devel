@@ -1,6 +1,7 @@
 var annotated_dup =
 [
-    [ "HdlcdAccessClient", "classHdlcdAccessClient.html", "classHdlcdAccessClient" ],
+    [ "Frame", "classFrame.html", "classFrame" ],
+    [ "HdlcdClient", "classHdlcdClient.html", "classHdlcdClient" ],
     [ "HdlcdPacket", "classHdlcdPacket.html", "classHdlcdPacket" ],
     [ "HdlcdPacketCtrl", "classHdlcdPacketCtrl.html", "classHdlcdPacketCtrl" ],
     [ "HdlcdPacketData", "classHdlcdPacketData.html", "classHdlcdPacketData" ],

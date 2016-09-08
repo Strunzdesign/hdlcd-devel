@@ -1,0 +1,5 @@
+<map id="HdlcdClient::Close" name="HdlcdClient::Close">
+<area shape="rect" id="node2" href="$classHdlcdClient.html#ad24e55fb62d6c12be0ca85e347d8bcb3" title="The constructor of HdlcdClient objects. " alt="" coords="193,5,365,32"/>
+<area shape="rect" id="node3" href="$classHdlcdClient.html#a15239f2325b36b76eb8f25cf137356a3" title="The destructor of HdlcdClient objects. " alt="" coords="189,56,369,83"/>
+<area shape="rect" id="node4" href="$classHdlcdClient.html#a5cbabf6359bc2b260bfd29baeabfae68" title="Send a single control packet to the peer entity. " alt="" coords="213,107,346,133"/>
+</map>

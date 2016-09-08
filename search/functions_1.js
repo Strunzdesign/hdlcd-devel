@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['close',['Close',['../classHdlcdAccessClient.html#a326569f7ee8a9faa85e58f4e996cc4a9',1,'HdlcdAccessClient::Close()'],['../classHdlcdPacketEndpoint.html#a60e33a54cbd58a29fb22240688b91202',1,'HdlcdPacketEndpoint::Close()']]],
+  ['close',['Close',['../classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d',1,'HdlcdClient::Close()'],['../classHdlcdPacketEndpoint.html#a60e33a54cbd58a29fb22240688b91202',1,'HdlcdPacketEndpoint::Close()']]],
   ['createdeserializedpacket',['CreateDeserializedPacket',['../classHdlcdPacketCtrl.html#a53c84fc5ed816a1f691ca2624080ba7c',1,'HdlcdPacketCtrl::CreateDeserializedPacket()'],['../classHdlcdPacketData.html#a7db3a7af067f58bb64f496fb0fda35f8',1,'HdlcdPacketData::CreateDeserializedPacket()']]],
   ['createechorequest',['CreateEchoRequest',['../classHdlcdPacketCtrl.html#a2002583ec1c0d87e2b9f1536ec5dd4ae',1,'HdlcdPacketCtrl']]],
   ['createkeepaliverequest',['CreateKeepAliveRequest',['../classHdlcdPacketCtrl.html#a5e97a81fa23440a2f5ca89353647bc96',1,'HdlcdPacketCtrl']]],

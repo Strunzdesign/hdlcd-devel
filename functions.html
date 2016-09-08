@@ -78,6 +78,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
       <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
@@ -87,8 +88,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_e"><span>e</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
       <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_h"><span>h</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
       <li><a href="#index_w"><span>w</span></a></li>
@@ -129,17 +132,17 @@ $(document).ready(function(){initNavTree('functions.html','');});
 
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
 <li>BytesNeeded()
-: <a class="el" href="classHdlcdPacket.html#aae85f09faf969d6ad8e1257e17d2a028">HdlcdPacket</a>
+: <a class="el" href="classFrame.html#ae5d4b218c9e23d41b48a688bdf4c63e8">Frame</a>
 </li>
 <li>BytesReceived()
-: <a class="el" href="classHdlcdPacket.html#a79d6ad4b1556d89a79dddd2326d3c03c">HdlcdPacket</a>
+: <a class="el" href="classFrame.html#a1e28f1bdc7eea632f638247c73caa9d6">Frame</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
 <li>Close()
-: <a class="el" href="classHdlcdAccessClient.html#a326569f7ee8a9faa85e58f4e996cc4a9">HdlcdAccessClient</a>
+: <a class="el" href="classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d">HdlcdClient</a>
 , <a class="el" href="classHdlcdPacketEndpoint.html#a60e33a54cbd58a29fb22240688b91202">HdlcdPacketEndpoint</a>
 </li>
 <li>CreateDeserializedPacket()
@@ -189,12 +192,22 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </ul>
 
 
+<h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>Frame()
+: <a class="el" href="classFrame.html#ad2e5946cf41d4817e750500acf05d02b">Frame</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
 <li>GetData()
 : <a class="el" href="classHdlcdPacketData.html#abc690e2d3d84998df23221f10f893f81">HdlcdPacketData</a>
 </li>
 <li>GetDesiredLockState()
 : <a class="el" href="classHdlcdPacketCtrl.html#addd115864ff204e792b2a2ba705b614d">HdlcdPacketCtrl</a>
+</li>
+<li>GetHdlcdPacketType()
+: <a class="el" href="classHdlcdPacket.html#add280d6f20d1ba0b204eb9fc04280c44">HdlcdPacket</a>
 </li>
 <li>GetInvalid()
 : <a class="el" href="classHdlcdPacketData.html#a8797aee7e556ae194f9a3a12e1900895">HdlcdPacketData</a>
@@ -221,11 +234,8 @@ $(document).ready(function(){initNavTree('functions.html','');});
 
 
 <h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
-<li>HdlcdAccessClient()
-: <a class="el" href="classHdlcdAccessClient.html#a3e8c5fc1ed62113c0e3318d4de57229f">HdlcdAccessClient</a>
-</li>
-<li>HdlcdPacket()
-: <a class="el" href="classHdlcdPacket.html#a679019ade5ea77f19ecab13c484c2b1d">HdlcdPacket</a>
+<li>HdlcdClient()
+: <a class="el" href="classHdlcdClient.html#ad24e55fb62d6c12be0ca85e347d8bcb3">HdlcdClient</a>
 </li>
 <li>HdlcdPacketEndpoint()
 : <a class="el" href="classHdlcdPacketEndpoint.html#aaa32185671678035f53cdc784ce90074">HdlcdPacketEndpoint</a>
@@ -233,28 +243,38 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </ul>
 
 
+<h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>m_BytesRemaining
+: <a class="el" href="classFrame.html#a17df3390173d38e71e3a69c5142ec5b3">Frame</a>
+</li>
+<li>m_Payload
+: <a class="el" href="classFrame.html#af3d878e64864d7f1893f34e6a6a6d9f0">Frame</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
 <li>Send()
-: <a class="el" href="classHdlcdAccessClient.html#a1e649a831ca7831e2d1a4d448fcb55b2">HdlcdAccessClient</a>
+: <a class="el" href="classHdlcdClient.html#a2d7d399fabe34c244867798aab304aa3">HdlcdClient</a>
 , <a class="el" href="classHdlcdPacketEndpoint.html#a6e06062dc770293925634412a5a943a2">HdlcdPacketEndpoint</a>
 </li>
 <li>Serialize()
-: <a class="el" href="classHdlcdPacket.html#a0d414ab4fd3c1c963b7a0bf002a5f85e">HdlcdPacket</a>
+: <a class="el" href="classFrame.html#ad25373889d9cceacc902b98339456ee4">Frame</a>
 </li>
 <li>SetOnClosedCallback()
-: <a class="el" href="classHdlcdAccessClient.html#ad0a9e1e5dc6fa5a9d6f97f2151c516f2">HdlcdAccessClient</a>
+: <a class="el" href="classHdlcdClient.html#aca11bffddc34e66a67d7e738e9e8d6b3">HdlcdClient</a>
 , <a class="el" href="classHdlcdPacketEndpoint.html#ad1f83d0848b78eec5aa2f7544e076b39">HdlcdPacketEndpoint</a>
 </li>
 <li>SetOnCtrlCallback()
-: <a class="el" href="classHdlcdAccessClient.html#a0d2274c4ad7105ea688a200b7a29c7c6">HdlcdAccessClient</a>
+: <a class="el" href="classHdlcdClient.html#a720df5b80af119a88da1ed201b32b46e">HdlcdClient</a>
 , <a class="el" href="classHdlcdPacketEndpoint.html#a24ee2c3fd30ef7a8edf65e5e3a1f2eaa">HdlcdPacketEndpoint</a>
 </li>
 <li>SetOnDataCallback()
-: <a class="el" href="classHdlcdAccessClient.html#a2d84fd28fcdba05ae66fd7847ca0ad2a">HdlcdAccessClient</a>
+: <a class="el" href="classHdlcdClient.html#a35c0dfb9e0e2ae4ac6e139b7737e0f55">HdlcdClient</a>
 , <a class="el" href="classHdlcdPacketEndpoint.html#a7242b2b596329aebfc6bd6f5d710b420">HdlcdPacketEndpoint</a>
 </li>
 <li>Shutdown()
-: <a class="el" href="classHdlcdAccessClient.html#a3ab3e7ace7fb520d475fa3f43996727a">HdlcdAccessClient</a>
+: <a class="el" href="classHdlcdClient.html#aa99303f6eee0726654e8cd7b4a2aba2d">HdlcdClient</a>
 , <a class="el" href="classHdlcdPacketEndpoint.html#a2716d1eca247b778d34351313a27f4d9">HdlcdPacketEndpoint</a>
 </li>
 <li>Start()
@@ -278,11 +298,11 @@ $(document).ready(function(){initNavTree('functions.html','');});
 
 
 <h3><a class="anchor" id="index_0x7e"></a>- ~ -</h3><ul>
-<li>~HdlcdAccessClient()
-: <a class="el" href="classHdlcdAccessClient.html#a287c037f9f4ff3ccc1929fb9bdf07f65">HdlcdAccessClient</a>
+<li>~Frame()
+: <a class="el" href="classFrame.html#acd1d3c822166a747d42edaf97c770a5c">Frame</a>
 </li>
-<li>~HdlcdPacket()
-: <a class="el" href="classHdlcdPacket.html#af06deb706b5d3a7475d534c48a20ec63">HdlcdPacket</a>
+<li>~HdlcdClient()
+: <a class="el" href="classHdlcdClient.html#a15239f2325b36b76eb8f25cf137356a3">HdlcdClient</a>
 </li>
 <li>~HdlcdPacketEndpoint()
 : <a class="el" href="classHdlcdPacketEndpoint.html#a40f429a3e941b7139e9ea25edf61abce">HdlcdPacketEndpoint</a>
