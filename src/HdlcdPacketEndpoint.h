@@ -1,5 +1,5 @@
 /**
- * \file HdlcdPacketEndpoint.h
+ * \file      HdlcdPacketEndpoint.h
  * \brief 
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de

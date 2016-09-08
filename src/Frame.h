@@ -1,5 +1,5 @@
 /**
- * \file Frame.h
+ * \file      Frame.h
  * \brief 
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
