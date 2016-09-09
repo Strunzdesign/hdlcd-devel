@@ -127,13 +127,8 @@ public:
 
 private:
     // Private CTOR
-    HdlcdPacketCtrl() {
-        m_bAlive = false;
-        m_bLockedByOthers = false;
-        m_bLockedBySelf = false;
-        m_bLockSerialPort = false;
-        m_eCtrlType = CTRL_TYPE_UNSET;
-        m_eDeserialize = DESERIALIZE_FULL;
+    HdlcdPacketCtrl(): m_bAlive(false), m_bLockedByOthers(false), m_bLockedBySelf(false), m_bLockSerialPort(false),
+                       m_eCtrlType(CTRL_TYPE_UNSET), m_eDeserialize(DESERIALIZE_FULL) {
     }
     
     // Internal helpers

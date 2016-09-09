@@ -86,11 +86,7 @@ public:
     
 private:
     // Private CTOR
-    HdlcdPacketData() {
-        m_bReliable = false;
-        m_bInvalid = false;
-        m_bWasSent = false;
-        m_eDeserialize = DESERIALIZE_FULL;
+    HdlcdPacketData(): m_bReliable(false), m_bInvalid(false), m_bWasSent(false), m_eDeserialize(DESERIALIZE_FULL) {
     }
     
     // Internal helpers
@@ -109,8 +105,8 @@ private:
         l_Buffer.emplace_back(l_Type);
         
         // Prepare length field
-        l_Buffer.emplace_back((m_Payload.size() >> 8) & 0x00FF);
-        l_Buffer.emplace_back((m_Payload.size() >> 0) & 0x00FF);
+        l_Buffer.emplace_back((m_Payload.size() >> 8) & 0xFF);
+        l_Buffer.emplace_back((m_Payload.size() >> 0) & 0xFF);
         
         // Add payload
         l_Buffer.insert(l_Buffer.end(), m_Payload.begin(), m_Payload.end());
