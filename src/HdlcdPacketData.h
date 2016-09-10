@@ -52,15 +52,11 @@ public:
         return l_PacketData;
     }
 
-    static std::shared_ptr<HdlcdPacketData> CreateDeserializedPacket(unsigned char a_Type) {
+    static std::shared_ptr<HdlcdPacketData> CreateDeserializedPacket() {
         // Called on reception: evaluate type field
         auto l_PacketData(std::shared_ptr<HdlcdPacketData>(new HdlcdPacketData));
-        //bool l_bReserved = (a_Type & 0x08); // TODO: abort if set
-        l_PacketData->m_bReliable = (a_Type & 0x04);
-        l_PacketData->m_bInvalid  = (a_Type & 0x02);
-        l_PacketData->m_bWasSent  = (a_Type & 0x01);
-        l_PacketData->m_eDeserialize = DESERIALIZE_SIZE;
-        l_PacketData->m_BytesRemaining = 2;
+        l_PacketData->m_eDeserialize = DESERIALIZE_HEADER; // Next: read header including the packet type byte
+        l_PacketData->m_BytesRemaining = 3;
         return l_PacketData;
     }
     
@@ -113,21 +109,35 @@ private:
         return l_Buffer;
     }
     
-    bool BytesReceived(const unsigned char *a_ReadBuffer, size_t a_BytesRead) {
-        if (Frame::BytesReceived(a_ReadBuffer, a_BytesRead)) {
+    bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
+        if (Frame::ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable)) {
             // Subsequent bytes are required
             return true; // no error (yet)
         } // if
         
         // All requested bytes are available
         switch (m_eDeserialize) {
-        case DESERIALIZE_SIZE: {
+        case DESERIALIZE_HEADER: {
             // Deserialize the length field
-            assert(m_Payload.size() == 2);
-            m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(&m_Payload[0])));
+            assert(m_Payload.size() == 3);
+
+            // Deserialize the control byte
+            const unsigned char &l_Control = m_Payload[0];
+            if (l_Control & 0x08) {
+                // The reserved bit was set... abort
+                m_eDeserialize = DESERIALIZE_ERROR;
+                return false;
+            } // if
+
+            m_bReliable = (l_Control & 0x04);
+            m_bInvalid  = (l_Control & 0x02);
+            m_bWasSent  = (l_Control & 0x01);
+            
+            // Parse length field
+            m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(&m_Payload[1])));
             m_Payload.clear();
             if (m_BytesRemaining) {
-                m_eDeserialize = DESERIALIZE_DATA;
+                m_eDeserialize = DESERIALIZE_BODY;
             } else {
                 // An empty data packet... may happen
                 m_eDeserialize = DESERIALIZE_FULL;
@@ -135,18 +145,24 @@ private:
 
             break;
         }
-        case DESERIALIZE_DATA: {
+        case DESERIALIZE_BODY: {
             // Read of payload completed
             m_eDeserialize = DESERIALIZE_FULL;
             break;
         }
+        case DESERIALIZE_ERROR:
         case DESERIALIZE_FULL:
         default:
             assert(false);
         } // switch
         
-        // No error, maybe subsequent bytes are required
-        return true;
+        // Maybe subsequent bytes are required?
+        if ((m_BytesRemaining) && (a_BytesAvailable)) {
+            return (this->ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable));
+        } else {        
+            // No error, but maybe subsequent bytes are still required
+            return true;
+        } // else
     }
     
     // Members
@@ -154,10 +170,10 @@ private:
     bool m_bInvalid;
     bool m_bWasSent;
     typedef enum {
-        DESERIALIZE_ERROR = 0,
-        DESERIALIZE_SIZE  = 1,
-        DESERIALIZE_DATA  = 2,
-        DESERIALIZE_FULL  = 3
+        DESERIALIZE_ERROR  = 0,
+        DESERIALIZE_HEADER = 1,
+        DESERIALIZE_BODY   = 2,
+        DESERIALIZE_FULL   = 3
     } E_DESERIALIZE;
     E_DESERIALIZE m_eDeserialize;
 };

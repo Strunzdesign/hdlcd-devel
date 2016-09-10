@@ -61,22 +61,14 @@ public:
      *  \param a_SAP the numerical indentifier of the service access protocol
      */
     HdlcdClient(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::string a_SerialPortName, unsigned char a_SAP):
+        m_IOService(a_IOService),
+        m_SAP(a_SAP),
         m_bClosed(false),
         m_TCPDataSocket(a_IOService),
         m_TCPCtrlSocket(a_IOService),
         m_bDataSocketConnected(false),
         m_bCtrlSocketConnected(false),
-        m_SerialPortName(a_SerialPortName),
-        m_SAP(a_SAP) {
-        m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_TCPDataSocket);
-        m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_TCPCtrlSocket);
-        // Callbacks: request data packets only from the data endpoint and control packets only from the control endpoint.
-        // On any error, close everything!
-        m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
-        m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ OnCtrlReceived(a_PacketCtrl); });
-        m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
-        m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
-        
+        m_SerialPortName(a_SerialPortName) {        
         // Connect data socket
         boost::asio::async_connect(m_TCPDataSocket, a_EndpointIterator,
                                    [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
@@ -120,8 +112,13 @@ public:
      *  Initiates a shutdown procedure for correct teardown of all TCP connections
      */
     void Shutdown() {
-        m_PacketEndpointData->Shutdown();
-        m_PacketEndpointCtrl->Shutdown();
+        if (m_PacketEndpointData) {
+            m_PacketEndpointData->Shutdown();
+        } // if
+        
+        if (m_PacketEndpointCtrl) {
+            m_PacketEndpointCtrl->Shutdown();
+        } // if
     }
 
     /*! \brief Close the client entity
@@ -131,18 +128,20 @@ public:
     void Close() {
         if (m_bClosed == false) {
             m_bClosed = true;
-            if (m_PacketEndpointData->WasStarted() == false) {
+            if (m_PacketEndpointData) {
+                m_PacketEndpointData->Close();
+                m_PacketEndpointData.reset();
+            } else {
                 m_TCPDataSocket.cancel();
                 m_TCPDataSocket.close();
-            } else {
-                m_PacketEndpointData->Close();
             } // else
             
-            if (m_PacketEndpointCtrl->WasStarted() == false) {
+            if (m_PacketEndpointCtrl) {
+                m_PacketEndpointCtrl->Close();
+                m_PacketEndpointCtrl.reset();
+            } else {
                 m_TCPCtrlSocket.cancel();
                 m_TCPCtrlSocket.close();
-            } else {
-                m_PacketEndpointCtrl->Close();
             } // else
             
             if (m_OnClosedCallback) {
@@ -189,7 +188,14 @@ public:
      *  \param a_OnSendDoneCallback the callback handler to be called if the provided data packet was sent (optional)
      */
     bool Send(const HdlcdPacketData& a_PacketData, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
-        return m_PacketEndpointData->Send(&a_PacketData, a_OnSendDoneCallback);
+        bool l_bRetVal = false;
+        if (m_PacketEndpointData) {
+            l_bRetVal = m_PacketEndpointData->Send(a_PacketData, a_OnSendDoneCallback);
+        } else {
+            m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+        } // else
+        
+        return l_bRetVal;
     }
 
     /*! \brief Send a single control packet to the peer entity
@@ -200,7 +206,14 @@ public:
      *  \param a_OnSendDoneCallback the callback handler to be called if the provided control packet was sent (optional)
      */
     bool Send(const HdlcdPacketCtrl& a_PacketCtrl, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
-        return m_PacketEndpointCtrl->Send(&a_PacketCtrl);
+        bool l_bRetVal = false;
+        if (m_PacketEndpointCtrl) {
+            l_bRetVal= m_PacketEndpointCtrl->Send(a_PacketCtrl, a_OnSendDoneCallback);
+        } else {
+            m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+        } // else
+
+        return l_bRetVal;
     }
     
 private:
@@ -232,7 +245,10 @@ private:
                                  [this](boost::system::error_code a_ErrorCode, std::size_t a_BytesWritten) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (!a_ErrorCode) {
-                // Continue with the exchange of packets
+                // Continue with the exchange of data packets
+                m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TCPDataSocket);
+                m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
+                m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
                 m_PacketEndpointData->Start();
             } else {
                 std::cerr << "Write of session header to the data socket failed!" << std::endl;
@@ -245,7 +261,10 @@ private:
                                  [this](boost::system::error_code a_ErrorCode, std::size_t a_BytesWritten) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (!a_ErrorCode) {
-                // Continue with the echange of packets
+                // Continue with the echange of control packets
+                m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TCPCtrlSocket);
+                m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ OnCtrlReceived(a_PacketCtrl); });
+                m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
                 m_PacketEndpointCtrl->Start();
             } else {
                 std::cerr << "Write of session header to the control socket failed!" << std::endl;
@@ -289,6 +308,7 @@ private:
     }
     
     // Members
+    boost::asio::io_service& m_IOService;
     unsigned char m_SAP; //!< The service access point identifier that specifies the session type
     bool m_bClosed; //!< Indicates whether the HDLCd access protocol entity has already been closed
     boost::asio::ip::tcp::socket m_TCPDataSocket; //!< The TCP connection dedicated to user data

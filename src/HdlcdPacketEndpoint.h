@@ -37,24 +37,24 @@
 #ifndef HDLCD_PACKET_ENDPOINT_H
 #define HDLCD_PACKET_ENDPOINT_H
 
-#include <deque>
 #include <iostream>
 #include <memory>
 #include <utility>
 #include <boost/asio.hpp>
+#include "FrameEndpoint.h"
 #include "HdlcdPacketData.h"
 #include "HdlcdPacketCtrl.h"
 
 class HdlcdPacketEndpoint: public std::enable_shared_from_this<HdlcdPacketEndpoint> {
 public:
-    HdlcdPacketEndpoint(boost::asio::ip::tcp::socket& a_TCPSocket): m_TCPSocket(a_TCPSocket), m_KeepAliveTimer(a_TCPSocket.get_io_service()) {
-        m_SEPState = SEPSTATE_DISCONNECTED;
-        m_bWriteInProgress = false;
-        m_bShutdown = false;
+    HdlcdPacketEndpoint(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::socket& a_TCPSocket): m_IOService(a_IOService), m_KeepAliveTimer(a_IOService) {
         m_bStarted = false;
         m_bStopped = false;
-        m_bReceiving = false;
-        m_SendBufferOffset = 0;
+        m_FrameEndpoint = std::make_shared<FrameEndpoint>(a_IOService, a_TCPSocket, 0xF0);
+        m_FrameEndpoint->RegisterFrameFactory(HDLCD_PACKET_DATA, []()->std::shared_ptr<Frame>{ return HdlcdPacketData::CreateDeserializedPacket(); });
+        m_FrameEndpoint->RegisterFrameFactory(HDLCD_PACKET_CTRL, []()->std::shared_ptr<Frame>{ return HdlcdPacketCtrl::CreateDeserializedPacket(); });
+        m_FrameEndpoint->SetOnFrameCallback([this](std::shared_ptr<Frame> a_Frame)->bool{ return OnFrame(a_Frame); });
+        m_FrameEndpoint->SetOnClosedCallback ([this](){ OnClosed(); });
     }
     
     ~HdlcdPacketEndpoint() {
@@ -62,10 +62,6 @@ public:
         m_OnCtrlCallback = NULL;
         m_OnClosedCallback = NULL;
         Close();
-    }
-    
-    bool WasStarted() const {
-        return m_bStarted;
     }
             
     // Callback methods
@@ -81,58 +77,28 @@ public:
         m_OnClosedCallback = a_OnClosedCallback;
     }
     
-    bool Send(const HdlcdPacket* a_Packet, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
-        assert(a_Packet != NULL);
-        if (m_SEPState == SEPSTATE_SHUTDOWN) {
-            return false;
-        } // if
-
-        // TODO: check size of the queue. If it reaches a specific limit: kill the socket to prevent DoS attacks
-        if (m_SendQueue.size() >= 10) {
-            if (a_OnSendDoneCallback) {
-                a_OnSendDoneCallback();
-            } // if
-
-            // TODO: check what happens if this is caused by an important packet, e.g., a keep alive or an echo response packet
-            return false;
-        } // if
-        
-        m_SendQueue.emplace_back(std::make_pair(std::move(a_Packet->Serialize()), a_OnSendDoneCallback));
-        if ((!m_bWriteInProgress) && (!m_SendQueue.empty()) && (m_SEPState == SEPSTATE_CONNECTED)) {
-            DoWrite();
-        } // if
-        
-        return true;
+    bool Send(const HdlcdPacket& a_HdlcdPacket, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
+        return (m_FrameEndpoint->SendFrame(a_HdlcdPacket, a_OnSendDoneCallback));
     }
     
     void Start() {
         assert(m_bStarted == false);
         assert(m_bStopped == false);
-        assert(m_SEPState == SEPSTATE_DISCONNECTED);
-        assert(m_bWriteInProgress == false);
-        assert(m_bReceiving == false);
-        m_SendBufferOffset = 0;
         m_bStarted = true;
-        m_SEPState = SEPSTATE_CONNECTED;
-        TriggerNextDataPacket();
+        m_FrameEndpoint->Start();
         StartKeepAliveTimer();
-        if (!m_SendQueue.empty()) {
-            DoWrite();
-        } // if
     }
 
     void Shutdown() {
-        m_bShutdown = true;
+        m_FrameEndpoint->Shutdown();
         m_KeepAliveTimer.cancel();
     }
 
     void Close() {
         if (m_bStarted && (!m_bStopped)) {
             m_bStopped = true;
-            m_bReceiving = false;
             m_KeepAliveTimer.cancel();
-            m_TCPSocket.cancel();
-            m_TCPSocket.close();
+            m_FrameEndpoint->Close();
             if (m_OnClosedCallback) {
                 m_OnClosedCallback();
             } // if
@@ -140,15 +106,7 @@ public:
     }
     
     void TriggerNextDataPacket() {
-        // Checks
-        if (m_bReceiving) {
-            return;
-        } // if
-        
-        if ((m_bStarted) && (!m_bStopped) && (m_SEPState == SEPSTATE_CONNECTED)) {
-            // Start reading the next packet
-            ReadType();
-        } // if
+        m_FrameEndpoint->TriggerNextFrame();
     }
 
 private:
@@ -157,177 +115,61 @@ private:
         m_KeepAliveTimer.expires_from_now(boost::posix_time::minutes(1));
         m_KeepAliveTimer.async_wait([this, self](const boost::system::error_code& a_ErrorCode) {
             if (!a_ErrorCode) {
-                // Periodically send keep alive packet, but do not congest the TCP socket
-                if (m_SendQueue.empty()) {
-                    auto l_Packet = HdlcdPacketCtrl::CreateKeepAliveRequest();
-                    Send(&l_Packet);
-                    StartKeepAliveTimer();
-                } // if
+                // Periodically send keep alive packets
+                m_FrameEndpoint->SendFrame(HdlcdPacketCtrl::CreateKeepAliveRequest());
+                StartKeepAliveTimer();
             } // if
         }); // async_wait
     }
 
-    void ReadType() {
-        m_bReceiving = true;
-        auto self(shared_from_this());
-        if (m_bStopped) return;
-        assert(!m_IncomingPacket);
-        boost::asio::async_read(m_TCPSocket, boost::asio::buffer(m_ReadBuffer, 1),
-                                [this, self](boost::system::error_code a_ErrorCode, std::size_t a_BytesRead) {
-            if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-            if (m_bStopped) return;
-            if (a_ErrorCode) {
-                std::cerr << "Read of packet header failed, socket closed!" << std::endl;
-                Close();
-                return;
-            } // if
-            
-            // Evaluate type field
-            unsigned char l_Type = m_ReadBuffer[0];
-            switch (l_Type & 0xF0) {
-            case 0x00: {
-                // Is data packet
-                m_IncomingPacket = HdlcdPacketData::CreateDeserializedPacket(l_Type);
-                break;
-            }
-            case 0x10: {
-                // Is control packet
-                m_IncomingPacket = HdlcdPacketCtrl::CreateDeserializedPacket(l_Type);
-                break;
-            }
-            default:
-                std::cerr << "Unknown content field in received packet header, socket closed!" << std::endl;
-                Close();
-                return;
-            } // switch
-            
-            ReadRemainingBytes();
-        }); // async_read
+private:
+    // Members
+    void OnClosed() {
+        Close();
     }
     
-    void ReadRemainingBytes() {
-        auto self(shared_from_this());
-        if (m_bStopped) return;
-        assert(m_IncomingPacket);
-        size_t l_BytesNeeded = m_IncomingPacket->BytesNeeded();
-        if (l_BytesNeeded) { // TODO: check buffer size!
-            // More bytes needed 
-            boost::asio::async_read(m_TCPSocket, boost::asio::buffer(m_ReadBuffer, l_BytesNeeded),
-                                    [this, self](boost::system::error_code a_ErrorCode, std::size_t a_BytesRead) {
-                if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-                if (m_bStopped) return;
-                if (!a_ErrorCode) {
-                    if (m_IncomingPacket->BytesReceived(m_ReadBuffer, a_BytesRead)) {
-                        ReadRemainingBytes();
-                    } else {
-                        std::cerr << "TCP packet error!" << std::endl;
-                        Close();
-                    } // else
-                } else {
-                    std::cerr << "TCP read error!" << std::endl;
-                    Close();
-                } // else
-            }); // async_read
+    bool OnFrame(std::shared_ptr<Frame> a_Frame) {
+        // Reception completed, deliver the packet
+        bool l_bReceiving = true;
+        auto l_PacketData = std::dynamic_pointer_cast<HdlcdPacketData>(a_Frame);
+        if (l_PacketData) {
+            if (m_OnDataCallback) {
+                // Deliver the data packet but stall the receiver
+                l_bReceiving = m_OnDataCallback(l_PacketData);
+            } // if
         } else {
-            // Reception completed, deliver packet
-            auto l_PacketData = std::dynamic_pointer_cast<HdlcdPacketData>(m_IncomingPacket);
-            if (l_PacketData) {
-                if (m_OnDataCallback) {
-                    // Deliver the data packet but stall the receiver
-                    m_bReceiving = m_OnDataCallback(l_PacketData);
+            auto l_PacketCtrl = std::dynamic_pointer_cast<HdlcdPacketCtrl>(a_Frame);
+            if (l_PacketCtrl) {
+                bool l_bDeliver = true;
+                if (l_PacketCtrl->GetPacketType() == HdlcdPacketCtrl::CTRL_TYPE_KEEP_ALIVE) {
+                    // This is a keep alive packet, simply drop it.
+                    l_bDeliver = false;
+                } // if
+                
+                if ((l_bDeliver) && (m_OnCtrlCallback)) {
+                    m_OnCtrlCallback(*(l_PacketCtrl.get()));
                 } // if
             } else {
-                auto l_PacketCtrl = std::dynamic_pointer_cast<HdlcdPacketCtrl>(m_IncomingPacket);
-                if (l_PacketCtrl) {
-                    bool l_bDeliver = true;
-                    if (l_PacketCtrl->GetPacketType() == HdlcdPacketCtrl::CTRL_TYPE_KEEP_ALIVE) {
-                        // This is a keep alive packet, simply drop it.
-                        l_bDeliver = false;
-                    } // if
-                    
-                    if ((l_bDeliver) && (m_OnCtrlCallback)) {
-                        m_OnCtrlCallback(*(l_PacketCtrl.get()));
-                    } // if
-                } else {
-                    assert(false);
-                } // else
+                assert(false);
             } // else
-
-            // Depending on the reveicer state, trigger reception of the next packet
-            m_IncomingPacket.reset();
-            if (m_bReceiving) {
-                ReadType();
-            } // if
         } // else
+        
+        return l_bReceiving;
     }
-
-    void DoWrite() {
-        auto self(shared_from_this());
-        if (m_bStopped) return;
-        m_bWriteInProgress = true;
-        boost::asio::async_write(m_TCPSocket, boost::asio::buffer(&(m_SendQueue.front().first.data()[m_SendBufferOffset]), (m_SendQueue.front().first.size() - m_SendBufferOffset)),
-                                 [this, self](boost::system::error_code a_ErrorCode, std::size_t a_BytesSent) {
-            if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-            if (m_bStopped) return;
-            if (!a_ErrorCode) {
-                m_SendBufferOffset += a_BytesSent;
-                if (m_SendBufferOffset == m_SendQueue.front().first.size()) {
-                    // Completed transmission. If a callback was provided, call it now to demand for a subsequent packet
-                    if (m_SendQueue.front().second) {
-                        m_SendQueue.front().second();
-                    } // if
-
-                    // Remove transmitted packet
-                    m_SendQueue.pop_front();
-                    m_SendBufferOffset = 0;
-                    if (!m_SendQueue.empty()) {
-                        DoWrite();
-                    } else {
-                        m_bWriteInProgress = false;
-                        if (m_bShutdown) {
-                            m_SEPState = SEPSTATE_SHUTDOWN;
-                            m_TCPSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-                            Close();
-                        } // if
-                    } // else
-                } else {
-                    // Only a partial transmission. We are not done yet.
-                    DoWrite();
-                } // else
-            } else {
-                std::cerr << "TCP write error!" << std::endl;
-                Close();
-            } // else
-        }); // async_write
-    }
-
-private:
+    
+    boost::asio::io_service& m_IOService;
+    std::shared_ptr<FrameEndpoint> m_FrameEndpoint;
+    
+    
     // All possible callbacks for a user of this class
     std::function<bool(std::shared_ptr<const HdlcdPacketData> a_PacketData)> m_OnDataCallback;
     std::function<void(const HdlcdPacketCtrl& a_PacketCtrl)> m_OnCtrlCallback;
     std::function<void()> m_OnClosedCallback;
     
-    boost::asio::ip::tcp::socket &m_TCPSocket;
-    std::shared_ptr<HdlcdPacket> m_IncomingPacket;
-    std::deque<std::pair<std::vector<unsigned char>, std::function<void()>>> m_SendQueue; // To be transmitted
-    size_t m_SendBufferOffset; //!< To detect and handle partial writes to the TCP socket
-    bool m_bWriteInProgress;
-    enum { max_length = 65535 };
-    unsigned char m_ReadBuffer[max_length];
-    
-    // State
-    typedef enum {
-        SEPSTATE_DISCONNECTED = 0,
-        SEPSTATE_CONNECTED    = 1,
-        SEPSTATE_SHUTDOWN     = 2
-    } E_SEPSTATE;
-    E_SEPSTATE m_SEPState;
-    bool m_bShutdown;
     bool m_bStarted;
     bool m_bStopped;
-    bool m_bReceiving;
     
-    // Timer
+    // The keep alive timer
     boost::asio::deadline_timer m_KeepAliveTimer;
 };
 

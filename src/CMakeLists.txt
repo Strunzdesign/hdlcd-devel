@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 install(FILES
     Frame.h
+    FrameEndpoint.h
     HdlcdClient.h
     HdlcdConfig.h
     HdlcdPacket.h

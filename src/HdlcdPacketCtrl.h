@@ -51,12 +51,11 @@ public:
         CTRL_TYPE_UNSET       = 0xFF
     } E_CTRL_TYPE;
 
-    static std::shared_ptr<HdlcdPacketCtrl> CreateDeserializedPacket(unsigned char a_Type) {
+    static std::shared_ptr<HdlcdPacketCtrl> CreateDeserializedPacket() {
         // Called on reception: evaluate type field
         auto l_PacketCtrl(std::shared_ptr<HdlcdPacketCtrl>(new HdlcdPacketCtrl));
-        // TODO: abort if type is not 0x10
-        l_PacketCtrl->m_eDeserialize = DESERIALIZE_CTRL;
-        l_PacketCtrl->m_BytesRemaining = 1;
+        l_PacketCtrl->m_eDeserialize   = DESERIALIZE_BODY; // Next: read body including the packet type byte
+        l_PacketCtrl->m_BytesRemaining = 2;
         return l_PacketCtrl;
     }
     
@@ -167,25 +166,35 @@ private:
         return l_Buffer;
     }
     
-    bool BytesReceived(const unsigned char *a_ReadBuffer, size_t a_BytesRead) {
-        if (Frame::BytesReceived(a_ReadBuffer, a_BytesRead)) {
+    bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
+        if (Frame::ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable)) {
             // Subsequent bytes are required
             return true; // no error (yet)
         } // if
 
         // All requested bytes are available
         switch (m_eDeserialize) {
-        case DESERIALIZE_CTRL: {
+        case DESERIALIZE_BODY: {
             // Deserialize the control byte
-            assert(m_Payload.size() == 1);
-            const unsigned char &l_Control = m_Payload[0];
+            assert(m_Payload.size() == 2);
+            if (m_Payload[0] != HDLCD_PACKET_CTRL) {
+                // Wrong control field
+                m_eDeserialize = DESERIALIZE_ERROR;
+                return false;
+            } // if
+            
+            const unsigned char &l_Control = m_Payload[1];
             m_Payload.clear();
-
             switch (l_Control & 0xF0) {
             case 0x00: {
                 m_eCtrlType = CTRL_TYPE_PORT_STATUS;
                 // For both requests and responses
-                // TODO: check other bits!
+                if (l_Control & 0x08) {
+                    // The reserved bit was set... abort
+                    m_eDeserialize = DESERIALIZE_ERROR;
+                    return false;
+                } // if
+                
                 m_bAlive          = (l_Control & 0x04);
                 m_bLockedByOthers = (l_Control & 0x02);
                 m_bLockedBySelf   = (l_Control & 0x01);
@@ -213,13 +222,19 @@ private:
             m_eDeserialize = DESERIALIZE_FULL;
             break;
         }
+        case DESERIALIZE_ERROR:
         case DESERIALIZE_FULL:
         default:
             assert(false);
         } // switch
         
-        // No error, maybe subsequent bytes are required
-        return true;
+        // Maybe subsequent bytes are required?
+        if ((m_BytesRemaining) && (a_BytesAvailable)) {
+            return (this->ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable));
+        } else {        
+            // No error, but maybe subsequent bytes are still required
+            return true;
+        } // else
     }
 
     // Members
@@ -231,7 +246,7 @@ private:
     E_CTRL_TYPE m_eCtrlType;
     typedef enum {
         DESERIALIZE_ERROR = 0,
-        DESERIALIZE_CTRL  = 1,
+        DESERIALIZE_BODY  = 1,
         DESERIALIZE_FULL  = 2
     } E_DESERIALIZE;
     E_DESERIALIZE m_eDeserialize;
