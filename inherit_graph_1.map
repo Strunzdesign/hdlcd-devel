@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classHdlcdClient.html" title="Class HdlcdClient. " alt="" coords="5,5,100,32"/>
+<area shape="rect" id="node2" href="$classFrameEndpoint.html" title="FrameEndpoint" alt="" coords="255,5,374,32"/>
+<area shape="rect" id="node3" href="$classHdlcdPacketEndpoint.html" title="HdlcdPacketEndpoint" alt="" coords="236,56,393,83"/>
 </map>

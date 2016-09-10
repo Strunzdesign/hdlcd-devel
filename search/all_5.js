@@ -14,6 +14,6 @@ var searchData=
   ['hdlcdpacketctrl_2eh',['HdlcdPacketCtrl.h',['../HdlcdPacketCtrl_8h.html',1,'']]],
   ['hdlcdpacketdata',['HdlcdPacketData',['../classHdlcdPacketData.html',1,'']]],
   ['hdlcdpacketdata_2eh',['HdlcdPacketData.h',['../HdlcdPacketData_8h.html',1,'']]],
-  ['hdlcdpacketendpoint',['HdlcdPacketEndpoint',['../classHdlcdPacketEndpoint.html',1,'HdlcdPacketEndpoint'],['../classHdlcdPacketEndpoint.html#aaa32185671678035f53cdc784ce90074',1,'HdlcdPacketEndpoint::HdlcdPacketEndpoint()']]],
+  ['hdlcdpacketendpoint',['HdlcdPacketEndpoint',['../classHdlcdPacketEndpoint.html',1,'HdlcdPacketEndpoint'],['../classHdlcdPacketEndpoint.html#a249fa688984df498e9771d5782070f5b',1,'HdlcdPacketEndpoint::HdlcdPacketEndpoint()']]],
   ['hdlcdpacketendpoint_2eh',['HdlcdPacketEndpoint.h',['../HdlcdPacketEndpoint_8h.html',1,'']]]
 ];

@@ -1,6 +1,7 @@
 <map id="src/HdlcdPacketEndpoint.h" name="src/HdlcdPacketEndpoint.h">
-<area shape="rect" id="node7" href="$HdlcdPacketData_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="402,80,545,107"/>
-<area shape="rect" id="node13" href="$HdlcdPacketCtrl_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="243,80,378,107"/>
-<area shape="rect" id="node8" href="$HdlcdPacket_8h.html" title="HdlcdPacket.h" alt="" coords="393,155,505,181"/>
-<area shape="rect" id="node9" href="$Frame_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="413,229,486,256"/>
+<area shape="rect" id="node6" href="$FrameEndpoint_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="272,80,401,107"/>
+<area shape="rect" id="node13" href="$HdlcdPacketData_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="636,80,779,107"/>
+<area shape="rect" id="node15" href="$HdlcdPacketCtrl_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="477,80,612,107"/>
+<area shape="rect" id="node10" href="$Frame_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="469,229,543,256"/>
+<area shape="rect" id="node14" href="$HdlcdPacket_8h.html" title="Copyright (c) 2016, Florian Evers, florian&#45;evers@gmx.de All rights reserved. " alt="" coords="599,155,711,181"/>
 </map>

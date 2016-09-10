@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['close',['Close',['../classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d',1,'HdlcdClient::Close()'],['../classHdlcdPacketEndpoint.html#a60e33a54cbd58a29fb22240688b91202',1,'HdlcdPacketEndpoint::Close()']]],
-  ['createdeserializedpacket',['CreateDeserializedPacket',['../classHdlcdPacketCtrl.html#a53c84fc5ed816a1f691ca2624080ba7c',1,'HdlcdPacketCtrl::CreateDeserializedPacket()'],['../classHdlcdPacketData.html#a7db3a7af067f58bb64f496fb0fda35f8',1,'HdlcdPacketData::CreateDeserializedPacket()']]],
+  ['close',['Close',['../classFrameEndpoint.html#ad7eea9fd66860006653b3173c06eab23',1,'FrameEndpoint::Close()'],['../classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d',1,'HdlcdClient::Close()'],['../classHdlcdPacketEndpoint.html#a60e33a54cbd58a29fb22240688b91202',1,'HdlcdPacketEndpoint::Close()']]],
+  ['createdeserializedpacket',['CreateDeserializedPacket',['../classHdlcdPacketCtrl.html#ad88dcd4a01554181721410f29a3ca554',1,'HdlcdPacketCtrl::CreateDeserializedPacket()'],['../classHdlcdPacketData.html#a5a8d57a19f73acfcf34a405b30568877',1,'HdlcdPacketData::CreateDeserializedPacket()']]],
   ['createechorequest',['CreateEchoRequest',['../classHdlcdPacketCtrl.html#a2002583ec1c0d87e2b9f1536ec5dd4ae',1,'HdlcdPacketCtrl']]],
   ['createkeepaliverequest',['CreateKeepAliveRequest',['../classHdlcdPacketCtrl.html#a5e97a81fa23440a2f5ca89353647bc96',1,'HdlcdPacketCtrl']]],
   ['createpacket',['CreatePacket',['../classHdlcdPacketData.html#a6f0ef5f8f9b4ed08c1b6b27b3b67fba2',1,'HdlcdPacketData']]],

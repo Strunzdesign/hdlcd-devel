@@ -1,6 +1,4 @@
 <map id="Frame::Serialize" name="Frame::Serialize">
-<area shape="rect" id="node2" href="$classFrame.html#acd1d3c822166a747d42edaf97c770a5c" title="Frame::~Frame" alt="" coords="197,5,313,32"/>
-<area shape="rect" id="node3" href="$classHdlcdPacketEndpoint.html#a6e06062dc770293925634412a5a943a2" title="HdlcdPacketEndpoint\l::Send" alt="" coords="176,57,333,98"/>
-<area shape="rect" id="node4" href="$classHdlcdPacketEndpoint.html#a3f035e49735765d15b7a4156f10062a1" title="HdlcdPacketEndpoint\l::TriggerNextDataPacket" alt="" coords="381,57,557,98"/>
-<area shape="rect" id="node5" href="$classHdlcdPacketEndpoint.html#a6f316b1ff172b355335482027d68c454" title="HdlcdPacketEndpoint\l::Start" alt="" coords="605,57,763,98"/>
+<area shape="rect" id="node2" href="$classFrame.html#acd1d3c822166a747d42edaf97c770a5c" title="Frame::~Frame" alt="" coords="217,5,333,32"/>
+<area shape="rect" id="node3" href="$classFrameEndpoint.html#a1e6df859d79570017dcba66f14c399df" title="FrameEndpoint::SendFrame" alt="" coords="176,56,373,83"/>
 </map>

@@ -135,8 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad25373889d9cceacc902b98339456ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5d4b218c9e23d41b48a688bdf4c63e8"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#ae5d4b218c9e23d41b48a688bdf4c63e8">BytesNeeded</a> () const </td></tr>
 <tr class="separator:ae5d4b218c9e23d41b48a688bdf4c63e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e28f1bdc7eea632f638247c73caa9d6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#a1e28f1bdc7eea632f638247c73caa9d6">BytesReceived</a> (const unsigned char *a_ReadBuffer, size_t a_BytesRead)</td></tr>
-<tr class="separator:a1e28f1bdc7eea632f638247c73caa9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c48d03a4d3d8806fb550eda33bfdf07"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#a5c48d03a4d3d8806fb550eda33bfdf07">ParseBytes</a> (const unsigned char *a_ReadBuffer, size_t &amp;a_ReadBufferOffset, size_t &amp;a_BytesAvailable)</td></tr>
+<tr class="separator:a5c48d03a4d3d8806fb550eda33bfdf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -235,7 +235,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a1e28f1bdc7eea632f638247c73caa9d6"></a>
+<a class="anchor" id="a5c48d03a4d3d8806fb550eda33bfdf07"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -243,7 +243,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool Frame::BytesReceived </td>
+          <td class="memname">virtual bool Frame::ParseBytes </td>
           <td>(</td>
           <td class="paramtype">const unsigned char *&#160;</td>
           <td class="paramname"><em>a_ReadBuffer</em>, </td>
@@ -251,8 +251,14 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>a_BytesRead</em>&#160;</td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>a_ReadBufferOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>a_BytesAvailable</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -267,15 +273,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="Frame_8h_source.html#l00053">53</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
+<p>Definition at line <a class="el" href="Frame_8h_source.html#l00054">54</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classFrame_a1e28f1bdc7eea632f638247c73caa9d6_icgraph.png" border="0" usemap="#classFrame_a1e28f1bdc7eea632f638247c73caa9d6_icgraph" alt=""/></div>
-<map name="classFrame_a1e28f1bdc7eea632f638247c73caa9d6_icgraph" id="classFrame_a1e28f1bdc7eea632f638247c73caa9d6_icgraph">
-<area shape="rect" id="node2" href="classHdlcdPacketCtrl.html#addd115864ff204e792b2a2ba705b614d" title="HdlcdPacketCtrl::GetDesired\lLockState" alt="" coords="224,5,425,47"/>
-<area shape="rect" id="node3" href="classHdlcdPacketData.html#a3e3ed17e50f5689f9f044c62582f3194" title="HdlcdPacketData::GetWasSent" alt="" coords="216,71,433,98"/>
+<div class="center"><img src="classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph.png" border="0" usemap="#classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph" alt=""/></div>
+<map name="classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph" id="classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph">
+<area shape="rect" id="node2" href="classHdlcdPacketCtrl.html#addd115864ff204e792b2a2ba705b614d" title="HdlcdPacketCtrl::GetDesired\lLockState" alt="" coords="201,5,403,47"/>
+<area shape="rect" id="node3" href="classHdlcdPacketData.html#a3e3ed17e50f5689f9f044c62582f3194" title="HdlcdPacketData::GetWasSent" alt="" coords="193,71,411,98"/>
 </map>
 </div>
 </p>
@@ -308,10 +314,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classFrame_ad25373889d9cceacc902b98339456ee4_icgraph.png" border="0" usemap="#classFrame_ad25373889d9cceacc902b98339456ee4_icgraph" alt=""/></div>
 <map name="classFrame_ad25373889d9cceacc902b98339456ee4_icgraph" id="classFrame_ad25373889d9cceacc902b98339456ee4_icgraph">
-<area shape="rect" id="node2" href="classFrame.html#acd1d3c822166a747d42edaf97c770a5c" title="Frame::~Frame" alt="" coords="197,5,313,32"/>
-<area shape="rect" id="node3" href="classHdlcdPacketEndpoint.html#a6e06062dc770293925634412a5a943a2" title="HdlcdPacketEndpoint\l::Send" alt="" coords="176,57,333,98"/>
-<area shape="rect" id="node4" href="classHdlcdPacketEndpoint.html#a3f035e49735765d15b7a4156f10062a1" title="HdlcdPacketEndpoint\l::TriggerNextDataPacket" alt="" coords="381,57,557,98"/>
-<area shape="rect" id="node5" href="classHdlcdPacketEndpoint.html#a6f316b1ff172b355335482027d68c454" title="HdlcdPacketEndpoint\l::Start" alt="" coords="605,57,763,98"/>
+<area shape="rect" id="node2" href="classFrame.html#acd1d3c822166a747d42edaf97c770a5c" title="Frame::~Frame" alt="" coords="217,5,333,32"/>
+<area shape="rect" id="node3" href="classFrameEndpoint.html#a1e6df859d79570017dcba66f14c399df" title="FrameEndpoint::SendFrame" alt="" coords="176,56,373,83"/>
 </map>
 </div>
 </p>
@@ -337,7 +341,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="Frame_8h_source.html#l00066">66</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
+<p>Definition at line <a class="el" href="Frame_8h_source.html#l00077">77</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
 
 </div>
 </div>
@@ -359,7 +363,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="Frame_8h_source.html#l00065">65</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
+<p>Definition at line <a class="el" href="Frame_8h_source.html#l00076">76</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
 
 </div>
 </div>
