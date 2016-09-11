@@ -133,7 +133,7 @@ private:
     // Internal helpers
     E_HDLCD_PACKET GetHdlcdPacketType() const { return HDLCD_PACKET_CTRL; }
 
-    // Serializer and deserializer
+    // Serializer
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
         std::vector<unsigned char> l_Buffer;
@@ -166,25 +166,21 @@ private:
         return l_Buffer;
     }
     
-    bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
-        if (Frame::ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable)) {
-            // Subsequent bytes are required
-            return true; // no error (yet)
-        } // if
-
+    // Deserializer
+    bool Deserialize() {
         // All requested bytes are available
         switch (m_eDeserialize) {
         case DESERIALIZE_BODY: {
             // Deserialize the control byte
-            assert(m_Payload.size() == 2);
-            if (m_Payload[0] != HDLCD_PACKET_CTRL) {
+            assert(m_Buffer.size() == 2);
+            if (m_Buffer[0] != HDLCD_PACKET_CTRL) {
                 // Wrong control field
                 m_eDeserialize = DESERIALIZE_ERROR;
                 return false;
             } // if
-            
-            const unsigned char &l_Control = m_Payload[1];
-            m_Payload.clear();
+
+            const unsigned char &l_Control = m_Buffer[1];
+            m_Buffer.clear();
             switch (l_Control & 0xF0) {
             case 0x00: {
                 m_eCtrlType = CTRL_TYPE_PORT_STATUS;
@@ -194,7 +190,7 @@ private:
                     m_eDeserialize = DESERIALIZE_ERROR;
                     return false;
                 } // if
-                
+
                 m_bAlive          = (l_Control & 0x04);
                 m_bLockedByOthers = (l_Control & 0x02);
                 m_bLockedBySelf   = (l_Control & 0x01);
@@ -227,14 +223,9 @@ private:
         default:
             assert(false);
         } // switch
-        
-        // Maybe subsequent bytes are required?
-        if ((m_BytesRemaining) && (a_BytesAvailable)) {
-            return (this->ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable));
-        } else {        
-            // No error, but maybe subsequent bytes are still required
-            return true;
-        } // else
+
+        // No error
+        return true;
     }
 
     // Members

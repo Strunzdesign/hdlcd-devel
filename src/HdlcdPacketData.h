@@ -45,7 +45,7 @@ public:
     static HdlcdPacketData CreatePacket(const std::vector<unsigned char> a_Payload, bool a_bReliable, bool a_bInvalid = false, bool a_bWasSent = false) {
         // Called for transmission
         HdlcdPacketData l_PacketData;
-        l_PacketData.m_Payload = std::move(a_Payload);
+        l_PacketData.m_Buffer = std::move(a_Payload);
         l_PacketData.m_bReliable = a_bReliable;
         l_PacketData.m_bInvalid = a_bInvalid;
         l_PacketData.m_bWasSent = a_bWasSent;
@@ -62,7 +62,7 @@ public:
     
     const std::vector<unsigned char>& GetData() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
-        return m_Payload;
+        return m_Buffer;
     }
     
     bool GetReliable() const {
@@ -88,7 +88,7 @@ private:
     // Internal helpers
     E_HDLCD_PACKET GetHdlcdPacketType() const { return HDLCD_PACKET_DATA; }
 
-    // Serializer and deserializer
+    // Serializer
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
         std::vector<unsigned char> l_Buffer;
@@ -101,28 +101,24 @@ private:
         l_Buffer.emplace_back(l_Type);
         
         // Prepare length field
-        l_Buffer.emplace_back((m_Payload.size() >> 8) & 0xFF);
-        l_Buffer.emplace_back((m_Payload.size() >> 0) & 0xFF);
+        l_Buffer.emplace_back((m_Buffer.size() >> 8) & 0xFF);
+        l_Buffer.emplace_back((m_Buffer.size() >> 0) & 0xFF);
         
         // Add payload
-        l_Buffer.insert(l_Buffer.end(), m_Payload.begin(), m_Payload.end());
+        l_Buffer.insert(l_Buffer.end(), m_Buffer.begin(), m_Buffer.end());
         return l_Buffer;
     }
     
-    bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
-        if (Frame::ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable)) {
-            // Subsequent bytes are required
-            return true; // no error (yet)
-        } // if
-        
+    // Deserializer
+    bool Deserialize() {
         // All requested bytes are available
         switch (m_eDeserialize) {
         case DESERIALIZE_HEADER: {
             // Deserialize the length field
-            assert(m_Payload.size() == 3);
+            assert(m_Buffer.size() == 3);
 
             // Deserialize the control byte
-            const unsigned char &l_Control = m_Payload[0];
+            const unsigned char &l_Control = m_Buffer[0];
             if (l_Control & 0x08) {
                 // The reserved bit was set... abort
                 m_eDeserialize = DESERIALIZE_ERROR;
@@ -134,8 +130,8 @@ private:
             m_bWasSent  = (l_Control & 0x01);
             
             // Parse length field
-            m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(&m_Payload[1])));
-            m_Payload.clear();
+            m_BytesRemaining = ntohs(*(reinterpret_cast<const uint16_t*>(&m_Buffer[1])));
+            m_Buffer.clear();
             if (m_BytesRemaining) {
                 m_eDeserialize = DESERIALIZE_BODY;
             } else {
@@ -155,14 +151,9 @@ private:
         default:
             assert(false);
         } // switch
-        
-        // Maybe subsequent bytes are required?
-        if ((m_BytesRemaining) && (a_BytesAvailable)) {
-            return (this->ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable));
-        } else {        
-            // No error, but maybe subsequent bytes are still required
-            return true;
-        } // else
+
+        // No error
+        return true;
     }
     
     // Members

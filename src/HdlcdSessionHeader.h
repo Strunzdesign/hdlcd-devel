@@ -75,7 +75,7 @@ private:
     HdlcdSessionHeader(): m_ServiceAccessPointSpecifier(0x00), m_eDeserialize(DESERIALIZE_FULL) {
     }
 
-    // Serializer and deserializer
+    // Serializer
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
         std::vector<unsigned char> l_Buffer;
@@ -86,29 +86,25 @@ private:
         return l_Buffer;
     }
 
-    bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
-        if (Frame::ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable)) {
-            // Subsequent bytes are required
-            return true; // no error (yet)
-        } // if
-        
+    // Deserializer
+    bool Deserialize() {
         // All requested bytes are available
         switch (m_eDeserialize) {
         case DESERIALIZE_HEADER: {
             // Deserialize the length field
-            assert(m_Payload.size() == 3);
+            assert(m_Buffer.size() == 3);
 
             // Deserialize the version field
-            if (m_Payload[0] != 0) {
+            if (m_Buffer[0] != 0) {
                 // Wrong version field
                 m_eDeserialize = DESERIALIZE_ERROR;
                 return false;
             } // if
             
             // Deserialize the service access point identifier and the length field of the serial port name
-            m_ServiceAccessPointSpecifier = m_Payload[1];
-            m_BytesRemaining = m_Payload[2];
-            m_Payload.clear();
+            m_ServiceAccessPointSpecifier = m_Buffer[1];
+            m_BytesRemaining = m_Buffer[2];
+            m_Buffer.clear();
             if (m_BytesRemaining) {
                 m_eDeserialize = DESERIALIZE_BODY;
             } else {
@@ -120,7 +116,7 @@ private:
         }
         case DESERIALIZE_BODY: {
             // Read of payload completed
-            m_SerialPortName.append(m_Payload.begin(), m_Payload.end());
+            m_SerialPortName.append(m_Buffer.begin(), m_Buffer.end());
             m_eDeserialize = DESERIALIZE_FULL;
             break;
         }
@@ -130,13 +126,8 @@ private:
             assert(false);
         } // switch
         
-        // Maybe subsequent bytes are required?
-        if ((m_BytesRemaining) && (a_BytesAvailable)) {
-            return (this->ParseBytes(a_ReadBuffer, a_ReadBufferOffset, a_BytesAvailable));
-        } else {        
-            // No error, but maybe subsequent bytes are still required
-            return true;
-        } // else
+        // No error
+        return true;
     }
     
     // Members

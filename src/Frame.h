@@ -50,30 +50,47 @@ public:
     // Serializer and deserializer
     virtual const std::vector<unsigned char> Serialize() const = 0;
     size_t BytesNeeded() const { return m_BytesRemaining; }
-    
-    virtual bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
+
+    // true: no error, false: parser error
+    bool ParseBytes(const unsigned char *a_ReadBuffer, size_t &a_ReadBufferOffset, size_t &a_BytesAvailable) {
         // Checks
         assert(a_ReadBuffer);
         assert(a_BytesAvailable);
         assert(m_BytesRemaining);
-        
-        // Determine the amount of bytes to consume
-        size_t l_BytesToCopy = m_BytesRemaining;
-        if (a_BytesAvailable < l_BytesToCopy) {
-            l_BytesToCopy = a_BytesAvailable;
-        } // if
-        
-        // Consume bytes from the provided buffer
-        m_Payload.insert(m_Payload.end(), &a_ReadBuffer[a_ReadBufferOffset], (&a_ReadBuffer[a_ReadBufferOffset] + l_BytesToCopy));
-        a_ReadBufferOffset += l_BytesToCopy;
-        a_BytesAvailable   -= l_BytesToCopy;
-        m_BytesRemaining   -= l_BytesToCopy;
-        return (m_BytesRemaining != 0); // true: subsequent bytes are required
+
+        // Parse the frame
+        bool l_bSuccess = true;
+        while ((m_BytesRemaining) && (a_BytesAvailable)) {
+            // Determine the amount of bytes to consume
+            size_t l_BytesToCopy = m_BytesRemaining;
+            if (a_BytesAvailable < l_BytesToCopy) {
+                l_BytesToCopy = a_BytesAvailable;
+            } // if
+
+            // Consume bytes from the provided buffer
+            m_Buffer.insert(m_Buffer.end(), &a_ReadBuffer[a_ReadBufferOffset], (&a_ReadBuffer[a_ReadBufferOffset] + l_BytesToCopy));
+            a_ReadBufferOffset += l_BytesToCopy;
+            a_BytesAvailable   -= l_BytesToCopy;
+            m_BytesRemaining   -= l_BytesToCopy;
+            if (m_BytesRemaining == 0) {
+                // A subsequent chunk of data is ready
+                if (Deserialize() == false) {
+                    // Failed to parse the received bytes
+                    l_bSuccess = false;
+                    break;
+                } // else
+            } // if
+        } // while
+
+        return l_bSuccess;
     }
-        
+
 protected:
-    // members
-    std::vector<unsigned char> m_Payload;
+    // Internal helpers
+    virtual bool Deserialize() = 0;
+
+    // Members
+    std::vector<unsigned char> m_Buffer;
     size_t m_BytesRemaining;
 };
 
