@@ -126,12 +126,16 @@ Collaboration diagram for FrameEndpoint:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad992bb3287c43f4ad04bcb95dd9379f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#ad992bb3287c43f4ad04bcb95dd9379f9">FrameEndpoint</a> (boost::asio::io_service &amp;a_IOService, boost::asio::ip::tcp::socket &amp;a_TcpSocket, unsigned char a_FrameTypeMask=0xFF)</td></tr>
-<tr class="separator:ad992bb3287c43f4ad04bcb95dd9379f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a178e55ba831e53fb8eb7d8fcb816e53e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a178e55ba831e53fb8eb7d8fcb816e53e">FrameEndpoint</a> (boost::asio::io_service &amp;a_IOService, boost::asio::ip::tcp::socket &amp;a_TcpSocket, uint8_t a_FrameTypeMask=0xFF)</td></tr>
+<tr class="separator:a178e55ba831e53fb8eb7d8fcb816e53e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab53760ef897d37e1e6aeade53b1c9766"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#ab53760ef897d37e1e6aeade53b1c9766">~FrameEndpoint</a> ()</td></tr>
 <tr class="separator:ab53760ef897d37e1e6aeade53b1c9766"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cf33b5f5e61e19196c320ceadf7ecdd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a0cf33b5f5e61e19196c320ceadf7ecdd">ResetFrameFactories</a> (uint8_t a_FrameTypeMask=0xFF)</td></tr>
+<tr class="separator:a0cf33b5f5e61e19196c320ceadf7ecdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ea55d7b0c6f7236c27022992f205aeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a1ea55d7b0c6f7236c27022992f205aeb">RegisterFrameFactory</a> (unsigned char a_FrameType, std::function&lt; std::shared_ptr&lt; <a class="el" href="classFrame.html">Frame</a> &gt;(void)&gt; a_FrameFactory)</td></tr>
 <tr class="separator:a1ea55d7b0c6f7236c27022992f205aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e2f8f8f92f8f2dd56b43788ff32326b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a9e2f8f8f92f8f2dd56b43788ff32326b">GetWasStarted</a> () const </td></tr>
+<tr class="separator:a9e2f8f8f92f8f2dd56b43788ff32326b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae286265b547f84f19b9a3a3e375a5fe1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#ae286265b547f84f19b9a3a3e375a5fe1">Start</a> ()</td></tr>
 <tr class="separator:ae286265b547f84f19b9a3a3e375a5fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0452cb8274bed71dccd4c1b3a66ed619"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a0452cb8274bed71dccd4c1b3a66ed619">Shutdown</a> ()</td></tr>
@@ -151,7 +155,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock">
 <p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00048">48</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ad992bb3287c43f4ad04bcb95dd9379f9"></a>
+<a class="anchor" id="a178e55ba831e53fb8eb7d8fcb816e53e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -173,7 +177,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>a_FrameTypeMask</em> = <code>0xFF</code>&#160;</td>
         </tr>
         <tr>
@@ -250,7 +254,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00100">100</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00110">110</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -262,6 +266,31 @@ Here is the caller graph for this function:</div>
 </map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="a9e2f8f8f92f8f2dd56b43788ff32326b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FrameEndpoint::GetWasStarted </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00085">85</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -288,6 +317,32 @@ Here is the caller graph for this function:</div>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00077">77</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0cf33b5f5e61e19196c320ceadf7ecdd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FrameEndpoint::ResetFrameFactories </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>a_FrameTypeMask</em> = <code>0xFF</code></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -333,7 +388,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00132">132</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00142">142</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -369,7 +424,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00160">160</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00170">170</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -406,7 +461,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00156">156</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00166">166</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -431,7 +486,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00096">96</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00106">106</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -456,7 +511,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00079">79</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00089">89</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -491,7 +546,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00112">112</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00122">122</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>

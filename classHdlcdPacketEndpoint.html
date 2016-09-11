@@ -126,8 +126,8 @@ Collaboration diagram for HdlcdPacketEndpoint:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a249fa688984df498e9771d5782070f5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdPacketEndpoint.html#a249fa688984df498e9771d5782070f5b">HdlcdPacketEndpoint</a> (boost::asio::io_service &amp;a_IOService, boost::asio::ip::tcp::socket &amp;a_TCPSocket)</td></tr>
-<tr class="separator:a249fa688984df498e9771d5782070f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a275c225a4abc58cb7efb1b424524085f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdPacketEndpoint.html#a275c225a4abc58cb7efb1b424524085f">HdlcdPacketEndpoint</a> (boost::asio::io_service &amp;a_IOService, std::shared_ptr&lt; <a class="el" href="classFrameEndpoint.html">FrameEndpoint</a> &gt; a_FrameEndpoint)</td></tr>
+<tr class="separator:a275c225a4abc58cb7efb1b424524085f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40f429a3e941b7139e9ea25edf61abce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdPacketEndpoint.html#a40f429a3e941b7139e9ea25edf61abce">~HdlcdPacketEndpoint</a> ()</td></tr>
 <tr class="separator:a40f429a3e941b7139e9ea25edf61abce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7242b2b596329aebfc6bd6f5d710b420"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdPacketEndpoint.html#a7242b2b596329aebfc6bd6f5d710b420">SetOnDataCallback</a> (std::function&lt; bool(std::shared_ptr&lt; const <a class="el" href="classHdlcdPacketData.html">HdlcdPacketData</a> &gt; a_PacketData)&gt; a_OnDataCallback)</td></tr>
@@ -149,9 +149,9 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00048">48</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00049">49</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a249fa688984df498e9771d5782070f5b"></a>
+<a class="anchor" id="a275c225a4abc58cb7efb1b424524085f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -167,8 +167,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">boost::asio::ip::tcp::socket &amp;&#160;</td>
-          <td class="paramname"><em>a_TCPSocket</em>&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classFrameEndpoint.html">FrameEndpoint</a> &gt;&#160;</td>
+          <td class="paramname"><em>a_FrameEndpoint</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -183,13 +183,13 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00050">50</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00051">51</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classHdlcdPacketEndpoint_a249fa688984df498e9771d5782070f5b_cgraph.png" border="0" usemap="#classHdlcdPacketEndpoint_a249fa688984df498e9771d5782070f5b_cgraph" alt=""/></div>
-<map name="classHdlcdPacketEndpoint_a249fa688984df498e9771d5782070f5b_cgraph" id="classHdlcdPacketEndpoint_a249fa688984df498e9771d5782070f5b_cgraph">
+<div class="center"><img src="classHdlcdPacketEndpoint_a275c225a4abc58cb7efb1b424524085f_cgraph.png" border="0" usemap="#classHdlcdPacketEndpoint_a275c225a4abc58cb7efb1b424524085f_cgraph" alt=""/></div>
+<map name="classHdlcdPacketEndpoint_a275c225a4abc58cb7efb1b424524085f_cgraph" id="classHdlcdPacketEndpoint_a275c225a4abc58cb7efb1b424524085f_cgraph">
 <area shape="rect" id="node2" href="classHdlcdPacketData.html#a5a8d57a19f73acfcf34a405b30568877" title="HdlcdPacketData::CreateDeserialized\lPacket" alt="" coords="216,5,475,47"/>
 <area shape="rect" id="node3" href="classHdlcdPacketCtrl.html#ad88dcd4a01554181721410f29a3ca554" title="HdlcdPacketCtrl::CreateDeserialized\lPacket" alt="" coords="220,71,471,112"/>
 </map>
@@ -219,7 +219,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00060">60</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00065">65</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -255,7 +255,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00097">97</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00107">107</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -302,7 +302,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00080">80</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00085">85</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -328,7 +328,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00076">76</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00081">81</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -354,7 +354,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00072">72</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00077">77</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -380,7 +380,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00068">68</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00073">73</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -405,7 +405,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00092">92</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00102">102</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -430,7 +430,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00084">84</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00089">89</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -455,7 +455,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00108">108</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdPacketEndpoint_8h_source.html#l00118">118</a> of file <a class="el" href="HdlcdPacketEndpoint_8h_source.html">HdlcdPacketEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>

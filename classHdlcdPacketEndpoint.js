@@ -1,6 +1,6 @@
 var classHdlcdPacketEndpoint =
 [
-    [ "HdlcdPacketEndpoint", "classHdlcdPacketEndpoint.html#a249fa688984df498e9771d5782070f5b", null ],
+    [ "HdlcdPacketEndpoint", "classHdlcdPacketEndpoint.html#a275c225a4abc58cb7efb1b424524085f", null ],
     [ "~HdlcdPacketEndpoint", "classHdlcdPacketEndpoint.html#a40f429a3e941b7139e9ea25edf61abce", null ],
     [ "Close", "classHdlcdPacketEndpoint.html#a60e33a54cbd58a29fb22240688b91202", null ],
     [ "Send", "classHdlcdPacketEndpoint.html#ac5c2039bef87ed56d25e13c7b4dbdb21", null ],
