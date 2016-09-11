@@ -13,4 +13,5 @@ install(FILES
     HdlcdPacketCtrl.h
     HdlcdPacketData.h
     HdlcdPacketEndpoint.h
+    HdlcdSessionHeader.h
 DESTINATION include)

@@ -77,8 +77,8 @@ public:
         m_OnClosedCallback = a_OnClosedCallback;
     }
     
-    bool Send(const HdlcdPacket& a_HdlcdPacket, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
-        return (m_FrameEndpoint->SendFrame(a_HdlcdPacket, a_OnSendDoneCallback));
+    bool Send(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
+        return (m_FrameEndpoint->SendFrame(a_Frame, a_OnSendDoneCallback));
     }
     
     void Start() {

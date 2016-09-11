@@ -131,6 +131,7 @@ public:
     
     bool SendFrame(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
         if (m_SEPState == SEPSTATE_SHUTDOWN) {
+            m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
             return false;
         } // if
 
@@ -197,7 +198,7 @@ private:
             auto l_FrameFactoryIt = m_FrameFactoryMap.find(m_ReadBuffer[m_ReadBufferOffset] & m_FrameTypeMask);
             if (l_FrameFactoryIt == m_FrameFactoryMap.end()) {
                 // Error, no suitable frame factory available!
-                std::cout << "Protocol violation: unknown frame type" << std::endl;
+                std::cerr << "Protocol violation: unknown frame type" << std::endl;
                 l_bAcceptsSubsequentFrames = false;
                 Close();
             } else {
@@ -213,7 +214,7 @@ private:
             size_t l_BytesAvailable = (m_BytesInReadBuffer - m_ReadBufferOffset);
             if (m_IncomingFrame->ParseBytes(m_ReadBuffer, m_ReadBufferOffset, l_BytesAvailable) == false) {
                 // Parser error
-                std::cout << "Protocol violation: invalid frame content" << std::endl;
+                std::cerr << "Protocol violation: invalid frame content" << std::endl;
                 l_bAcceptsSubsequentFrames = false;
                 Close();
             } else {

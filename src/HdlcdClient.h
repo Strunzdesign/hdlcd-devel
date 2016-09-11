@@ -41,6 +41,7 @@
 #include <vector>
 #include <string>
 #include "HdlcdPacketEndpoint.h"
+#include "HdlcdSessionHeader.h"
 #include "HdlcdPacketData.h"
 #include "HdlcdPacketCtrl.h"
 
@@ -58,40 +59,44 @@ public:
      *  \param a_IOService the boost IOService object
      *  \param a_EndpointIterator the boost endpoint iteratior referring to the destination
      *  \param a_SerialPortName the name of the serial port device
-     *  \param a_SAP the numerical indentifier of the service access protocol
+     *  \param a_ServiceAccessPointSpecifier the numerical indentifier of the service access protocol
      */
-    HdlcdClient(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::string a_SerialPortName, unsigned char a_SAP):
+    HdlcdClient(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, const std::string &a_SerialPortName, uint16_t a_ServiceAccessPointSpecifier):
         m_IOService(a_IOService),
-        m_SAP(a_SAP),
         m_bClosed(false),
-        m_TCPDataSocket(a_IOService),
-        m_TCPCtrlSocket(a_IOService),
-        m_bDataSocketConnected(false),
-        m_bCtrlSocketConnected(false),
-        m_SerialPortName(a_SerialPortName) {        
-        // Connect data socket
-        boost::asio::async_connect(m_TCPDataSocket, a_EndpointIterator,
-                                   [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
+        m_TcpSocketData(a_IOService),
+        m_TcpSocketCtrl(a_IOService) {
+        // Connect the data socket
+        boost::asio::async_connect(m_TcpSocketData, a_EndpointIterator,
+                                   [this, a_SerialPortName, a_ServiceAccessPointSpecifier](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-            if (!a_ErrorCode) {
-                m_bDataSocketConnected = true;
-                WriteSessionHeaders();
-            } else {
-                std::cerr << "Connect of data socket failed!" << std::endl;
+            if (a_ErrorCode) {
+                std::cerr << "Unable to connect to the HDLC daemon (data socket)" << std::endl;
                 Close();
+            } else {
+                // Create and start the packet endpoint for the exchange of user data packets
+                m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TcpSocketData);
+                m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
+                m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
+                m_PacketEndpointData->Start();
+                m_PacketEndpointData->Send(HdlcdSessionHeader::Create(a_ServiceAccessPointSpecifier, a_SerialPortName));
             } // else
         });
         
-        // Connect control socket
-        boost::asio::async_connect(m_TCPCtrlSocket, a_EndpointIterator,
-                                   [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
+        // Connect the control socket
+        boost::asio::async_connect(m_TcpSocketCtrl, a_EndpointIterator,
+                                   [this, a_SerialPortName](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-            if (!a_ErrorCode) {
-                m_bCtrlSocketConnected = true;
-                WriteSessionHeaders();
-            } else {
-                std::cerr << "Connect of control socket failed!" << std::endl;
+            if (a_ErrorCode) {
+                std::cerr << "Unable to connect to the HDLC daemon (control socket)" << std::endl;
                 Close();
+            } else {
+                // Create and start the packet endpoint for the exchange of control packets
+                m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TcpSocketCtrl);
+                m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ return OnCtrlReceived(a_PacketCtrl); });
+                m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
+                m_PacketEndpointCtrl->Start();
+                m_PacketEndpointCtrl->Send(HdlcdSessionHeader::Create(0x10, a_SerialPortName)); // 0x10: control flow only
             } // else
         });
     }
@@ -132,16 +137,16 @@ public:
                 m_PacketEndpointData->Close();
                 m_PacketEndpointData.reset();
             } else {
-                m_TCPDataSocket.cancel();
-                m_TCPDataSocket.close();
+                m_TcpSocketData.cancel();
+                m_TcpSocketData.close();
             } // else
             
             if (m_PacketEndpointCtrl) {
                 m_PacketEndpointCtrl->Close();
                 m_PacketEndpointCtrl.reset();
             } else {
-                m_TCPCtrlSocket.cancel();
-                m_TCPCtrlSocket.close();
+                m_TcpSocketCtrl.cancel();
+                m_TcpSocketCtrl.close();
             } // else
             
             if (m_OnClosedCallback) {
@@ -216,63 +221,7 @@ public:
         return l_bRetVal;
     }
     
-private:
-    /*! \brief Internal helper method to write the session headers to both outgoing TCP sockets
-     * 
-     *  This is an internal helper method to write the session headers to both outgoing TCP sockets
-     */
-    void WriteSessionHeaders() {
-        if ((!m_bDataSocketConnected) || (!m_bCtrlSocketConnected)) {
-            return;
-        } // if
-        
-        // Create session header for the data socket
-        assert(m_SessionHeaderData.empty());
-        m_SessionHeaderData.emplace_back(0x00); // Version 0
-        m_SessionHeaderData.emplace_back(m_SAP); // As specified by the user. TODO: optimize usage if 0x10
-        m_SessionHeaderData.emplace_back(m_SerialPortName.size()); // TODO: check if size fits into unsigned char
-        m_SessionHeaderData.insert(m_SessionHeaderData.end(), m_SerialPortName.data(), (m_SerialPortName.data() + m_SerialPortName.size()));
-        
-        // Create session header for the control socket
-        assert(m_SessionHeaderCtrl.empty());
-        m_SessionHeaderCtrl.emplace_back(0x00); // Version 0
-        m_SessionHeaderCtrl.emplace_back(0x10); // Control session
-        m_SessionHeaderCtrl.emplace_back(m_SerialPortName.size()); // TODO: check if size fits into unsigned char
-        m_SessionHeaderCtrl.insert(m_SessionHeaderCtrl.end(), m_SerialPortName.data(), (m_SerialPortName.data() + m_SerialPortName.size()));
-        
-        // Send session header via the data socket
-        boost::asio::async_write(m_TCPDataSocket, boost::asio::buffer(m_SessionHeaderData.data(), m_SessionHeaderData.size()),
-                                 [this](boost::system::error_code a_ErrorCode, std::size_t a_BytesWritten) {
-            if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-            if (!a_ErrorCode) {
-                // Continue with the exchange of data packets
-                m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TCPDataSocket);
-                m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
-                m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
-                m_PacketEndpointData->Start();
-            } else {
-                std::cerr << "Write of session header to the data socket failed!" << std::endl;
-                Close();
-            }
-        });
-        
-        // Send session header via the control socket
-        boost::asio::async_write(m_TCPCtrlSocket, boost::asio::buffer(m_SessionHeaderCtrl.data(), m_SessionHeaderCtrl.size()),
-                                 [this](boost::system::error_code a_ErrorCode, std::size_t a_BytesWritten) {
-            if (a_ErrorCode == boost::asio::error::operation_aborted) return;
-            if (!a_ErrorCode) {
-                // Continue with the echange of control packets
-                m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TCPCtrlSocket);
-                m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ OnCtrlReceived(a_PacketCtrl); });
-                m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
-                m_PacketEndpointCtrl->Start();
-            } else {
-                std::cerr << "Write of session header to the control socket failed!" << std::endl;
-                Close();
-            }
-        });
-    }
-    
+private:    
     /*! \brief Internal callback method to be called on reception of data packets
      * 
      *  This is an internal callback method to be called on reception of data packets
@@ -309,18 +258,10 @@ private:
     
     // Members
     boost::asio::io_service& m_IOService;
-    unsigned char m_SAP; //!< The service access point identifier that specifies the session type
     bool m_bClosed; //!< Indicates whether the HDLCd access protocol entity has already been closed
-    boost::asio::ip::tcp::socket m_TCPDataSocket; //!< The TCP connection dedicated to user data
-    boost::asio::ip::tcp::socket m_TCPCtrlSocket; //!< The TCP connection dedicated to control data
-    bool m_bDataSocketConnected; //!< This flag indicates whether the user data socket is established
-    bool m_bCtrlSocketConnected; //!< This flag indicates whether the user control socket is established
+    boost::asio::ip::tcp::socket m_TcpSocketData; //!< The TCP socket dedicated to user data
+    boost::asio::ip::tcp::socket m_TcpSocketCtrl; //!< The TCP socket dedicated to control data
     
-    // Both session headers to be transmitted
-    std::vector<unsigned char> m_SessionHeaderData; //!< The buffer containing the session header for the data socket
-    std::vector<unsigned char> m_SessionHeaderCtrl; //!< The buffer containing the session header for the control socket
-    
-    std::string m_SerialPortName; //!< The name of the serial port device
     std::shared_ptr<HdlcdPacketEndpoint> m_PacketEndpointData; //!< The packet endpoint class responsible for the connected data socket
     std::shared_ptr<HdlcdPacketEndpoint> m_PacketEndpointCtrl; //!< The packet endpoint class responsible for the connected control socket
     
