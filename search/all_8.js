@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['registerframefactory',['RegisterFrameFactory',['../classFrameEndpoint.html#a1ea55d7b0c6f7236c27022992f205aeb',1,'FrameEndpoint']]]
+  ['parsebytes',['ParseBytes',['../classFrame.html#a810569ed2d6c96aab5452c6fc4fef7f4',1,'Frame']]]
 ];

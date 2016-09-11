@@ -8,7 +8,8 @@ var hierarchy =
       [ "HdlcdPacket", "classHdlcdPacket.html", [
         [ "HdlcdPacketCtrl", "classHdlcdPacketCtrl.html", null ],
         [ "HdlcdPacketData", "classHdlcdPacketData.html", null ]
-      ] ]
+      ] ],
+      [ "HdlcdSessionHeader", "classHdlcdSessionHeader.html", null ]
     ] ],
     [ "HdlcdClient", "classHdlcdClient.html", null ]
 ];

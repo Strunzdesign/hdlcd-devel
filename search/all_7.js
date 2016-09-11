@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['parsebytes',['ParseBytes',['../classFrame.html#a5c48d03a4d3d8806fb550eda33bfdf07',1,'Frame']]]
+  ['m_5fbuffer',['m_Buffer',['../classFrame.html#a2e811bd64b50c9c8f5afd3236a5325ca',1,'Frame']]],
+  ['m_5fbytesremaining',['m_BytesRemaining',['../classFrame.html#a17df3390173d38e71e3a69c5142ec5b3',1,'Frame']]]
 ];

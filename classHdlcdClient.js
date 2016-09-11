@@ -1,6 +1,6 @@
 var classHdlcdClient =
 [
-    [ "HdlcdClient", "classHdlcdClient.html#ad24e55fb62d6c12be0ca85e347d8bcb3", null ],
+    [ "HdlcdClient", "classHdlcdClient.html#a2871a8bbbf024d3e383c73e5c67640d6", null ],
     [ "~HdlcdClient", "classHdlcdClient.html#a15239f2325b36b76eb8f25cf137356a3", null ],
     [ "Close", "classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d", null ],
     [ "Send", "classHdlcdClient.html#a2d7d399fabe34c244867798aab304aa3", null ],

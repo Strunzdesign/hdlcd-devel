@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('classFrame.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classFrame-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -120,6 +121,7 @@ Inheritance diagram for Frame:</div>
 <div class="center"><img src="classFrame__inherit__graph.png" border="0" usemap="#Frame_inherit__map" alt="Inheritance graph"/></div>
 <map name="Frame_inherit__map" id="Frame_inherit__map">
 <area shape="rect" id="node2" href="classHdlcdPacket.html" title="HdlcdPacket" alt="" coords="91,80,192,107"/>
+<area shape="rect" id="node5" href="classHdlcdSessionHeader.html" title="HdlcdSessionHeader" alt="" coords="216,80,371,107"/>
 <area shape="rect" id="node3" href="classHdlcdPacketCtrl.html" title="HdlcdPacketCtrl" alt="" coords="5,155,128,181"/>
 <area shape="rect" id="node4" href="classHdlcdPacketData.html" title="HdlcdPacketData" alt="" coords="152,155,283,181"/>
 </map>
@@ -135,13 +137,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad25373889d9cceacc902b98339456ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5d4b218c9e23d41b48a688bdf4c63e8"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#ae5d4b218c9e23d41b48a688bdf4c63e8">BytesNeeded</a> () const </td></tr>
 <tr class="separator:ae5d4b218c9e23d41b48a688bdf4c63e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c48d03a4d3d8806fb550eda33bfdf07"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#a5c48d03a4d3d8806fb550eda33bfdf07">ParseBytes</a> (const unsigned char *a_ReadBuffer, size_t &amp;a_ReadBufferOffset, size_t &amp;a_BytesAvailable)</td></tr>
-<tr class="separator:a5c48d03a4d3d8806fb550eda33bfdf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a810569ed2d6c96aab5452c6fc4fef7f4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#a810569ed2d6c96aab5452c6fc4fef7f4">ParseBytes</a> (const unsigned char *a_ReadBuffer, size_t &amp;a_ReadBufferOffset, size_t &amp;a_BytesAvailable)</td></tr>
+<tr class="separator:a810569ed2d6c96aab5452c6fc4fef7f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:adb9ae2902f56b8df524bc5be8975293e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#adb9ae2902f56b8df524bc5be8975293e">Deserialize</a> ()=0</td></tr>
+<tr class="separator:adb9ae2902f56b8df524bc5be8975293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:af3d878e64864d7f1893f34e6a6a6d9f0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#af3d878e64864d7f1893f34e6a6a6d9f0">m_Payload</a></td></tr>
-<tr class="separator:af3d878e64864d7f1893f34e6a6a6d9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e811bd64b50c9c8f5afd3236a5325ca"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#a2e811bd64b50c9c8f5afd3236a5325ca">m_Buffer</a></td></tr>
+<tr class="separator:a2e811bd64b50c9c8f5afd3236a5325ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17df3390173d38e71e3a69c5142ec5b3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrame.html#a17df3390173d38e71e3a69c5142ec5b3">m_BytesRemaining</a></td></tr>
 <tr class="separator:a17df3390173d38e71e3a69c5142ec5b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -235,7 +242,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a5c48d03a4d3d8806fb550eda33bfdf07"></a>
+<a class="anchor" id="adb9ae2902f56b8df524bc5be8975293e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -243,7 +250,40 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool Frame::ParseBytes </td>
+          <td class="memname">virtual bool Frame::Deserialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFrame_adb9ae2902f56b8df524bc5be8975293e_icgraph.png" border="0" usemap="#classFrame_adb9ae2902f56b8df524bc5be8975293e_icgraph" alt=""/></div>
+<map name="classFrame_adb9ae2902f56b8df524bc5be8975293e_icgraph" id="classFrame_adb9ae2902f56b8df524bc5be8975293e_icgraph">
+<area shape="rect" id="node2" href="classFrame.html#a810569ed2d6c96aab5452c6fc4fef7f4" title="Frame::ParseBytes" alt="" coords="192,5,332,32"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a810569ed2d6c96aab5452c6fc4fef7f4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Frame::ParseBytes </td>
           <td>(</td>
           <td class="paramtype">const unsigned char *&#160;</td>
           <td class="paramname"><em>a_ReadBuffer</em>, </td>
@@ -268,20 +308,19 @@ Here is the call graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="Frame_8h_source.html#l00054">54</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
+<p>Definition at line <a class="el" href="Frame_8h_source.html#l00055">55</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph.png" border="0" usemap="#classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph" alt=""/></div>
-<map name="classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph" id="classFrame_a5c48d03a4d3d8806fb550eda33bfdf07_icgraph">
-<area shape="rect" id="node2" href="classHdlcdPacketCtrl.html#addd115864ff204e792b2a2ba705b614d" title="HdlcdPacketCtrl::GetDesired\lLockState" alt="" coords="201,5,403,47"/>
-<area shape="rect" id="node3" href="classHdlcdPacketData.html#a3e3ed17e50f5689f9f044c62582f3194" title="HdlcdPacketData::GetWasSent" alt="" coords="193,71,411,98"/>
+<div class="center"><img src="classFrame_a810569ed2d6c96aab5452c6fc4fef7f4_cgraph.png" border="0" usemap="#classFrame_a810569ed2d6c96aab5452c6fc4fef7f4_cgraph" alt=""/></div>
+<map name="classFrame_a810569ed2d6c96aab5452c6fc4fef7f4_cgraph" id="classFrame_a810569ed2d6c96aab5452c6fc4fef7f4_cgraph">
+<area shape="rect" id="node2" href="classFrame.html#adb9ae2902f56b8df524bc5be8975293e" title="Frame::Deserialize" alt="" coords="193,5,332,32"/>
 </map>
 </div>
 </p>
@@ -323,6 +362,28 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a2e811bd64b50c9c8f5afd3236a5325ca"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;unsigned char&gt; Frame::m_Buffer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="Frame_8h_source.html#l00093">93</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a17df3390173d38e71e3a69c5142ec5b3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -341,29 +402,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="Frame_8h_source.html#l00077">77</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af3d878e64864d7f1893f34e6a6a6d9f0"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;unsigned char&gt; Frame::m_Payload</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="Frame_8h_source.html#l00076">76</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
+<p>Definition at line <a class="el" href="Frame_8h_source.html#l00094">94</a> of file <a class="el" href="Frame_8h_source.html">Frame.h</a>.</p>
 
 </div>
 </div>

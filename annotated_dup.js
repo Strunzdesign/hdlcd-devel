@@ -6,5 +6,6 @@ var annotated_dup =
     [ "HdlcdPacket", "classHdlcdPacket.html", "classHdlcdPacket" ],
     [ "HdlcdPacketCtrl", "classHdlcdPacketCtrl.html", "classHdlcdPacketCtrl" ],
     [ "HdlcdPacketData", "classHdlcdPacketData.html", "classHdlcdPacketData" ],
-    [ "HdlcdPacketEndpoint", "classHdlcdPacketEndpoint.html", "classHdlcdPacketEndpoint" ]
+    [ "HdlcdPacketEndpoint", "classHdlcdPacketEndpoint.html", "classHdlcdPacketEndpoint" ],
+    [ "HdlcdSessionHeader", "classHdlcdSessionHeader.html", "classHdlcdSessionHeader" ]
 ];
