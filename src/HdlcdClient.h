@@ -44,6 +44,7 @@
 #include "HdlcdSessionHeader.h"
 #include "HdlcdPacketData.h"
 #include "HdlcdPacketCtrl.h"
+#include "FrameEndpoint.h"
 
 /*! \class HdlcdClient
  *  \brief Class HdlcdClient
@@ -75,7 +76,7 @@ public:
                 Close();
             } else {
                 // Create and start the packet endpoint for the exchange of user data packets
-                m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TcpSocketData);
+                m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketData));
                 m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
                 m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
                 m_PacketEndpointData->Start();
@@ -92,7 +93,7 @@ public:
                 Close();
             } else {
                 // Create and start the packet endpoint for the exchange of control packets
-                m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, m_TcpSocketCtrl);
+                m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketCtrl));
                 m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ return OnCtrlReceived(a_PacketCtrl); });
                 m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
                 m_PacketEndpointCtrl->Start();

@@ -51,8 +51,8 @@ public:
         return l_HdlcdSessionHeader;
     }
 
-    static std::shared_ptr<HdlcdSessionHeader> CreateDeserializedPacket() {
-        // Called on reception: evaluate type field
+    static std::shared_ptr<HdlcdSessionHeader> CreateDeserializedFrame() {
+        // Called on reception
         auto l_HdlcdSessionHeader(std::shared_ptr<HdlcdSessionHeader>(new HdlcdSessionHeader));
         l_HdlcdSessionHeader->m_eDeserialize = DESERIALIZE_HEADER; // Next: read fixed-sized part of the session header
         l_HdlcdSessionHeader->m_BytesRemaining = 3;

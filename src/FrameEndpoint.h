@@ -48,7 +48,7 @@
 class FrameEndpoint: public std::enable_shared_from_this<FrameEndpoint>  {
 public:
     // CTOR and DTOR
-    FrameEndpoint(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::socket& a_TcpSocket, unsigned char a_FrameTypeMask = 0xFF): m_IOService(a_IOService), m_TcpSocket(a_TcpSocket), m_FrameTypeMask(a_FrameTypeMask) {
+    FrameEndpoint(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::socket& a_TcpSocket, uint8_t a_FrameTypeMask = 0xFF): m_IOService(a_IOService), m_TcpSocket(std::move(a_TcpSocket)), m_FrameTypeMask(a_FrameTypeMask) {
         // Initalize all remaining members
         m_SEPState = SEPSTATE_DISCONNECTED;
         m_bWriteInProgress = false;
@@ -68,12 +68,22 @@ public:
         Close();
     }
     
+    void ResetFrameFactories(uint8_t a_FrameTypeMask = 0xFF) {
+        // Drop all frame factories and copy the new filter mask
+        m_FrameFactoryMap.clear();
+        m_FrameTypeMask = a_FrameTypeMask;
+    }
+    
     void RegisterFrameFactory(unsigned char a_FrameType, std::function<std::shared_ptr<Frame>(void)> a_FrameFactory) {
         // Check that there is no frame factory for the specified frame type yet. If not then add it.
         assert(a_FrameFactory);
         unsigned char l_EffectiveFrameType = (a_FrameType & m_FrameTypeMask);
         assert(m_FrameFactoryMap.find(l_EffectiveFrameType) == m_FrameFactoryMap.end());
         m_FrameFactoryMap[l_EffectiveFrameType] = a_FrameFactory;
+    }
+    
+    bool GetWasStarted() const {
+        return m_bStarted;
     }
     
     void Start() {
@@ -279,8 +289,8 @@ private:
 
     // Members
     boost::asio::io_service& m_IOService;
-    boost::asio::ip::tcp::socket& m_TcpSocket;
-    unsigned char m_FrameTypeMask;
+    boost::asio::ip::tcp::socket m_TcpSocket;
+    uint8_t m_FrameTypeMask;
     
     std::shared_ptr<Frame> m_IncomingFrame;
     std::deque<std::pair<std::vector<unsigned char>, std::function<void()>>> m_SendQueue; // To be transmitted
@@ -309,7 +319,7 @@ private:
     std::function<void()>                       m_OnClosedCallback;
     
     // The frame factories
-    std::map<unsigned char, std::function<std::shared_ptr<Frame>(void)>> m_FrameFactoryMap;
+    std::map<uint8_t, std::function<std::shared_ptr<Frame>(void)>> m_FrameFactoryMap;
 };
 
 #endif // FRAME_ENDPOINT_H

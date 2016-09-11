@@ -44,13 +44,18 @@
 #include "FrameEndpoint.h"
 #include "HdlcdPacketData.h"
 #include "HdlcdPacketCtrl.h"
+#include <assert.h>
 
 class HdlcdPacketEndpoint: public std::enable_shared_from_this<HdlcdPacketEndpoint> {
 public:
-    HdlcdPacketEndpoint(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::socket& a_TCPSocket): m_IOService(a_IOService), m_KeepAliveTimer(a_IOService) {
+    HdlcdPacketEndpoint(boost::asio::io_service& a_IOService, std::shared_ptr<FrameEndpoint> a_FrameEndpoint): m_IOService(a_IOService), m_FrameEndpoint(a_FrameEndpoint), m_KeepAliveTimer(a_IOService) {
+        // Checks
+        assert(m_FrameEndpoint);
+
+        // Initialize remaining components
         m_bStarted = false;
         m_bStopped = false;
-        m_FrameEndpoint = std::make_shared<FrameEndpoint>(a_IOService, a_TCPSocket, 0xF0);
+        m_FrameEndpoint->ResetFrameFactories(0xF0); // 0xF0 = type byte filter regarding the HLDCd access protocol specification
         m_FrameEndpoint->RegisterFrameFactory(HDLCD_PACKET_DATA, []()->std::shared_ptr<Frame>{ return HdlcdPacketData::CreateDeserializedPacket(); });
         m_FrameEndpoint->RegisterFrameFactory(HDLCD_PACKET_CTRL, []()->std::shared_ptr<Frame>{ return HdlcdPacketCtrl::CreateDeserializedPacket(); });
         m_FrameEndpoint->SetOnFrameCallback([this](std::shared_ptr<Frame> a_Frame)->bool{ return OnFrame(a_Frame); });
@@ -85,7 +90,12 @@ public:
         assert(m_bStarted == false);
         assert(m_bStopped == false);
         m_bStarted = true;
-        m_FrameEndpoint->Start();
+        if (m_FrameEndpoint->GetWasStarted()) {
+            m_FrameEndpoint->TriggerNextFrame();
+        } else {
+            m_FrameEndpoint->Start();
+        } // else
+
         StartKeepAliveTimer();
     }
 
