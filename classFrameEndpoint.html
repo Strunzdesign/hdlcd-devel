@@ -144,12 +144,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad7eea9fd66860006653b3173c06eab23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95b3e65d99955094ca324f66e43859f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a95b3e65d99955094ca324f66e43859f2">TriggerNextFrame</a> ()</td></tr>
 <tr class="separator:a95b3e65d99955094ca324f66e43859f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e6df859d79570017dcba66f14c399df"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a1e6df859d79570017dcba66f14c399df">SendFrame</a> (const <a class="el" href="classFrame.html">Frame</a> &amp;a_Frame, std::function&lt; void()&gt; a_OnSendDoneCallback=std::function&lt; void()&gt;())</td></tr>
-<tr class="separator:a1e6df859d79570017dcba66f14c399df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dc9e910e5863e226bcd390bca80d387"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#a9dc9e910e5863e226bcd390bca80d387">SetOnFrameCallback</a> (std::function&lt; bool(std::shared_ptr&lt; <a class="el" href="classFrame.html">Frame</a> &gt;)&gt; a_OnFrameCallback=std::function&lt; bool(std::shared_ptr&lt; <a class="el" href="classFrame.html">Frame</a> &gt;)&gt;())</td></tr>
-<tr class="separator:a9dc9e910e5863e226bcd390bca80d387"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae776576dc1248c17d2c4645387de29e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#ae776576dc1248c17d2c4645387de29e7">SetOnClosedCallback</a> (std::function&lt; void()&gt; a_OnClosedCallback=std::function&lt; void()&gt;())</td></tr>
-<tr class="separator:ae776576dc1248c17d2c4645387de29e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa672b6a8a3444735ee233f9dc7c55d41"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#aa672b6a8a3444735ee233f9dc7c55d41">SendFrame</a> (const <a class="el" href="classFrame.html">Frame</a> &amp;a_Frame, std::function&lt; void()&gt; a_OnSendDoneCallback=nullptr)</td></tr>
+<tr class="separator:aa672b6a8a3444735ee233f9dc7c55d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff047fa5847a8bbc582b696f7757fd14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#aff047fa5847a8bbc582b696f7757fd14">SetOnFrameCallback</a> (std::function&lt; bool(std::shared_ptr&lt; <a class="el" href="classFrame.html">Frame</a> &gt;)&gt; a_OnFrameCallback)</td></tr>
+<tr class="separator:aff047fa5847a8bbc582b696f7757fd14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1a5df936321813329b570c22b268c67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrameEndpoint.html#aa1a5df936321813329b570c22b268c67">SetOnClosedCallback</a> (std::function&lt; void()&gt; a_OnClosedCallback)</td></tr>
+<tr class="separator:aa1a5df936321813329b570c22b268c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -262,7 +262,7 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classFrameEndpoint_ad7eea9fd66860006653b3173c06eab23_icgraph.png" border="0" usemap="#classFrameEndpoint_ad7eea9fd66860006653b3173c06eab23_icgraph" alt=""/></div>
 <map name="classFrameEndpoint_ad7eea9fd66860006653b3173c06eab23_icgraph" id="classFrameEndpoint_ad7eea9fd66860006653b3173c06eab23_icgraph">
 <area shape="rect" id="node2" href="classFrameEndpoint.html#ab53760ef897d37e1e6aeade53b1c9766" title="FrameEndpoint::~FrameEndpoint" alt="" coords="213,5,441,32"/>
-<area shape="rect" id="node3" href="classFrameEndpoint.html#ae776576dc1248c17d2c4645387de29e7" title="FrameEndpoint::SetOnClosed\lCallback" alt="" coords="223,57,431,98"/>
+<area shape="rect" id="node3" href="classFrameEndpoint.html#aa1a5df936321813329b570c22b268c67" title="FrameEndpoint::SetOnClosed\lCallback" alt="" coords="223,57,431,98"/>
 </map>
 </div>
 </p>
@@ -356,7 +356,7 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a1e6df859d79570017dcba66f14c399df"></a>
+<a class="anchor" id="aa672b6a8a3444735ee233f9dc7c55d41"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -373,7 +373,7 @@ Here is the caller graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
-          <td class="paramname"><em>a_OnSendDoneCallback</em> = <code>std::function&lt;void()&gt;()</code>&#160;</td>
+          <td class="paramname"><em>a_OnSendDoneCallback</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -393,8 +393,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classFrameEndpoint_a1e6df859d79570017dcba66f14c399df_cgraph.png" border="0" usemap="#classFrameEndpoint_a1e6df859d79570017dcba66f14c399df_cgraph" alt=""/></div>
-<map name="classFrameEndpoint_a1e6df859d79570017dcba66f14c399df_cgraph" id="classFrameEndpoint_a1e6df859d79570017dcba66f14c399df_cgraph">
+<div class="center"><img src="classFrameEndpoint_aa672b6a8a3444735ee233f9dc7c55d41_cgraph.png" border="0" usemap="#classFrameEndpoint_aa672b6a8a3444735ee233f9dc7c55d41_cgraph" alt=""/></div>
+<map name="classFrameEndpoint_aa672b6a8a3444735ee233f9dc7c55d41_cgraph" id="classFrameEndpoint_aa672b6a8a3444735ee233f9dc7c55d41_cgraph">
 <area shape="rect" id="node2" href="classFrame.html#ad25373889d9cceacc902b98339456ee4" title="Frame::Serialize" alt="" coords="251,5,373,32"/>
 </map>
 </div>
@@ -402,7 +402,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="ae776576dc1248c17d2c4645387de29e7"></a>
+<a class="anchor" id="aa1a5df936321813329b570c22b268c67"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -413,7 +413,7 @@ Here is the call graph for this function:</div>
           <td class="memname">void FrameEndpoint::SetOnClosedCallback </td>
           <td>(</td>
           <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
-          <td class="paramname"><em>a_OnClosedCallback</em> = <code>std::function&lt;void()&gt;()</code></td><td>)</td>
+          <td class="paramname"><em>a_OnClosedCallback</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -424,13 +424,13 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00170">170</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00173">173</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classFrameEndpoint_ae776576dc1248c17d2c4645387de29e7_cgraph.png" border="0" usemap="#classFrameEndpoint_ae776576dc1248c17d2c4645387de29e7_cgraph" alt=""/></div>
-<map name="classFrameEndpoint_ae776576dc1248c17d2c4645387de29e7_cgraph" id="classFrameEndpoint_ae776576dc1248c17d2c4645387de29e7_cgraph">
+<div class="center"><img src="classFrameEndpoint_aa1a5df936321813329b570c22b268c67_cgraph.png" border="0" usemap="#classFrameEndpoint_aa1a5df936321813329b570c22b268c67_cgraph" alt=""/></div>
+<map name="classFrameEndpoint_aa1a5df936321813329b570c22b268c67_cgraph" id="classFrameEndpoint_aa1a5df936321813329b570c22b268c67_cgraph">
 <area shape="rect" id="node2" href="classFrameEndpoint.html#ad7eea9fd66860006653b3173c06eab23" title="FrameEndpoint::Close" alt="" coords="281,5,441,32"/>
 <area shape="rect" id="node3" href="classFrameEndpoint.html#a95b3e65d99955094ca324f66e43859f2" title="FrameEndpoint::TriggerNext\lFrame" alt="" coords="261,57,460,98"/>
 </map>
@@ -439,7 +439,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a9dc9e910e5863e226bcd390bca80d387"></a>
+<a class="anchor" id="aff047fa5847a8bbc582b696f7757fd14"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -450,7 +450,7 @@ Here is the call graph for this function:</div>
           <td class="memname">void FrameEndpoint::SetOnFrameCallback </td>
           <td>(</td>
           <td class="paramtype">std::function&lt; bool(std::shared_ptr&lt; <a class="el" href="classFrame.html">Frame</a> &gt;)&gt;&#160;</td>
-          <td class="paramname"><em>a_OnFrameCallback</em> = <code>std::function&lt;bool(std::shared_ptr&lt;<a class="el" href="classFrame.html">Frame</a>&gt;)&gt;()</code></td><td>)</td>
+          <td class="paramname"><em>a_OnFrameCallback</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -461,7 +461,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00166">166</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
+<p>Definition at line <a class="el" href="FrameEndpoint_8h_source.html#l00169">169</a> of file <a class="el" href="FrameEndpoint_8h_source.html">FrameEndpoint.h</a>.</p>
 
 </div>
 </div>
@@ -554,7 +554,7 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classFrameEndpoint_a95b3e65d99955094ca324f66e43859f2_icgraph.png" border="0" usemap="#classFrameEndpoint_a95b3e65d99955094ca324f66e43859f2_icgraph" alt=""/></div>
 <map name="classFrameEndpoint_a95b3e65d99955094ca324f66e43859f2_icgraph" id="classFrameEndpoint_a95b3e65d99955094ca324f66e43859f2_icgraph">
 <area shape="rect" id="node2" href="classFrameEndpoint.html#ae286265b547f84f19b9a3a3e375a5fe1" title="FrameEndpoint::Start" alt="" coords="279,5,433,32"/>
-<area shape="rect" id="node3" href="classFrameEndpoint.html#ae776576dc1248c17d2c4645387de29e7" title="FrameEndpoint::SetOnClosed\lCallback" alt="" coords="252,57,460,98"/>
+<area shape="rect" id="node3" href="classFrameEndpoint.html#aa1a5df936321813329b570c22b268c67" title="FrameEndpoint::SetOnClosed\lCallback" alt="" coords="252,57,460,98"/>
 </map>
 </div>
 </p>

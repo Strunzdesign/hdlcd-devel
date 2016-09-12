@@ -119,9 +119,12 @@ $(document).ready(function(){initNavTree('classHdlcdClient.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2871a8bbbf024d3e383c73e5c67640d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#a2871a8bbbf024d3e383c73e5c67640d6">HdlcdClient</a> (boost::asio::io_service &amp;a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, const std::string &amp;a_SerialPortName, uint16_t a_ServiceAccessPointSpecifier)</td></tr>
-<tr class="memdesc:a2871a8bbbf024d3e383c73e5c67640d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects.  <a href="#a2871a8bbbf024d3e383c73e5c67640d6">More...</a><br /></td></tr>
-<tr class="separator:a2871a8bbbf024d3e383c73e5c67640d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade58a7b50e66d913d2bb0e2c08c30285"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#ade58a7b50e66d913d2bb0e2c08c30285">HdlcdClient</a> (boost::asio::io_service &amp;a_IOService, const std::string &amp;a_SerialPortName, uint16_t a_ServiceAccessPointSpecifier)</td></tr>
+<tr class="memdesc:ade58a7b50e66d913d2bb0e2c08c30285"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects.  <a href="#ade58a7b50e66d913d2bb0e2c08c30285">More...</a><br /></td></tr>
+<tr class="separator:ade58a7b50e66d913d2bb0e2c08c30285"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a485e29db5cb483d9c0ac45febd963bbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#a485e29db5cb483d9c0ac45febd963bbf">AsyncConnect</a> (boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::function&lt; void(bool a_bSuccess)&gt; a_OnConnectedCallback)</td></tr>
+<tr class="memdesc:a485e29db5cb483d9c0ac45febd963bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an asynchronous connect procedure regarding both TCP sockets.  <a href="#a485e29db5cb483d9c0ac45febd963bbf">More...</a><br /></td></tr>
+<tr class="separator:a485e29db5cb483d9c0ac45febd963bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15239f2325b36b76eb8f25cf137356a3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#a15239f2325b36b76eb8f25cf137356a3">~HdlcdClient</a> ()</td></tr>
 <tr class="memdesc:a15239f2325b36b76eb8f25cf137356a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects.  <a href="#a15239f2325b36b76eb8f25cf137356a3">More...</a><br /></td></tr>
 <tr class="separator:a15239f2325b36b76eb8f25cf137356a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,12 +143,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aca11bffddc34e66a67d7e738e9e8d6b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#aca11bffddc34e66a67d7e738e9e8d6b3">SetOnClosedCallback</a> (std::function&lt; void()&gt; a_OnClosedCallback)</td></tr>
 <tr class="memdesc:aca11bffddc34e66a67d7e738e9e8d6b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide a callback method to be called if this client entity is closing.  <a href="#aca11bffddc34e66a67d7e738e9e8d6b3">More...</a><br /></td></tr>
 <tr class="separator:aca11bffddc34e66a67d7e738e9e8d6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d7d399fabe34c244867798aab304aa3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#a2d7d399fabe34c244867798aab304aa3">Send</a> (const <a class="el" href="classHdlcdPacketData.html">HdlcdPacketData</a> &amp;a_PacketData, std::function&lt; void()&gt; a_OnSendDoneCallback=std::function&lt; void()&gt;())</td></tr>
-<tr class="memdesc:a2d7d399fabe34c244867798aab304aa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a single data packet to the peer entity.  <a href="#a2d7d399fabe34c244867798aab304aa3">More...</a><br /></td></tr>
-<tr class="separator:a2d7d399fabe34c244867798aab304aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cbabf6359bc2b260bfd29baeabfae68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#a5cbabf6359bc2b260bfd29baeabfae68">Send</a> (const <a class="el" href="classHdlcdPacketCtrl.html">HdlcdPacketCtrl</a> &amp;a_PacketCtrl, std::function&lt; void()&gt; a_OnSendDoneCallback=std::function&lt; void()&gt;())</td></tr>
-<tr class="memdesc:a5cbabf6359bc2b260bfd29baeabfae68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a single control packet to the peer entity.  <a href="#a5cbabf6359bc2b260bfd29baeabfae68">More...</a><br /></td></tr>
-<tr class="separator:a5cbabf6359bc2b260bfd29baeabfae68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7fdcd25b70b9a707ef63bc697078e82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#ab7fdcd25b70b9a707ef63bc697078e82">Send</a> (const <a class="el" href="classHdlcdPacketData.html">HdlcdPacketData</a> &amp;a_PacketData, std::function&lt; void()&gt; a_OnSendDoneCallback=nullptr)</td></tr>
+<tr class="memdesc:ab7fdcd25b70b9a707ef63bc697078e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a single data packet to the peer entity.  <a href="#ab7fdcd25b70b9a707ef63bc697078e82">More...</a><br /></td></tr>
+<tr class="separator:ab7fdcd25b70b9a707ef63bc697078e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9642ace6e882acdef5149401230b52c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHdlcdClient.html#ad9642ace6e882acdef5149401230b52c">Send</a> (const <a class="el" href="classHdlcdPacketCtrl.html">HdlcdPacketCtrl</a> &amp;a_PacketCtrl, std::function&lt; void()&gt; a_OnSendDoneCallback=nullptr)</td></tr>
+<tr class="memdesc:ad9642ace6e882acdef5149401230b52c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a single control packet to the peer entity.  <a href="#ad9642ace6e882acdef5149401230b52c">More...</a><br /></td></tr>
+<tr class="separator:ad9642ace6e882acdef5149401230b52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a>. </p>
@@ -153,7 +156,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00054">54</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2871a8bbbf024d3e383c73e5c67640d6"></a>
+<a class="anchor" id="ade58a7b50e66d913d2bb0e2c08c30285"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -165,12 +168,6 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">boost::asio::io_service &amp;&#160;</td>
           <td class="paramname"><em>a_IOService</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::asio::ip::tcp::resolver::iterator&#160;</td>
-          <td class="paramname"><em>a_EndpointIterator</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -198,29 +195,17 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The constructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects. </p>
-<p>The connection is established on instantiation (RAII)</p>
+<p>The constructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a_IOService</td><td>the boost IOService object </td></tr>
-    <tr><td class="paramname">a_EndpointIterator</td><td>the boost endpoint iteratior referring to the destination </td></tr>
     <tr><td class="paramname">a_SerialPortName</td><td>the name of the serial port device </td></tr>
     <tr><td class="paramname">a_ServiceAccessPointSpecifier</td><td>the numerical indentifier of the service access protocol </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00065">65</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classHdlcdClient_a2871a8bbbf024d3e383c73e5c67640d6_cgraph.png" border="0" usemap="#classHdlcdClient_a2871a8bbbf024d3e383c73e5c67640d6_cgraph" alt=""/></div>
-<map name="classHdlcdClient_a2871a8bbbf024d3e383c73e5c67640d6_cgraph" id="classHdlcdClient_a2871a8bbbf024d3e383c73e5c67640d6_cgraph">
-<area shape="rect" id="node2" href="classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d" title="Close the client entity. " alt="" coords="235,5,371,32"/>
-<area shape="rect" id="node3" href="classHdlcdSessionHeader.html#a1785e81464eefab72618df7df5e012ae" title="HdlcdSessionHeader\l::Create" alt="" coords="225,57,380,98"/>
-</map>
-</div>
-</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00064">64</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -248,7 +233,7 @@ Here is the call graph for this function:</div>
 <p>The destructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects. </p>
 <p>All open connections will automatically be closed by the destructor </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00109">109</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00119">119</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -263,6 +248,52 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a485e29db5cb483d9c0ac45febd963bbf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HdlcdClient::AsyncConnect </td>
+          <td>(</td>
+          <td class="paramtype">boost::asio::ip::tcp::resolver::iterator&#160;</td>
+          <td class="paramname"><em>a_EndpointIterator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(bool a_bSuccess)&gt;&#160;</td>
+          <td class="paramname"><em>a_OnConnectedCallback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform an asynchronous connect procedure regarding both TCP sockets. </p>
+<p>Perform an asynchronous connect procedure regarding both TCP sockets</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a_EndpointIterator</td><td>the boost endpoint iteratior referring to the destination </td></tr>
+    <tr><td class="paramname">a_OnConnectedCallback</td><td>the callback to be called if a result is available. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00083">83</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a6432392d6eeb5321cb2d13e24e09f52d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -287,23 +318,22 @@ Here is the call graph for this function:</div>
 <p>Close the client entity. </p>
 <p>Close the client entity and all its TCP connections </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00134">134</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00144">144</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classHdlcdClient_a6432392d6eeb5321cb2d13e24e09f52d_icgraph.png" border="0" usemap="#classHdlcdClient_a6432392d6eeb5321cb2d13e24e09f52d_icgraph" alt=""/></div>
 <map name="classHdlcdClient_a6432392d6eeb5321cb2d13e24e09f52d_icgraph" id="classHdlcdClient_a6432392d6eeb5321cb2d13e24e09f52d_icgraph">
-<area shape="rect" id="node2" href="classHdlcdClient.html#a2871a8bbbf024d3e383c73e5c67640d6" title="The constructor of HdlcdClient objects. " alt="" coords="193,5,365,32"/>
-<area shape="rect" id="node3" href="classHdlcdClient.html#a15239f2325b36b76eb8f25cf137356a3" title="The destructor of HdlcdClient objects. " alt="" coords="189,56,369,83"/>
-<area shape="rect" id="node4" href="classHdlcdClient.html#a5cbabf6359bc2b260bfd29baeabfae68" title="Send a single control packet to the peer entity. " alt="" coords="213,107,346,133"/>
+<area shape="rect" id="node2" href="classHdlcdClient.html#a15239f2325b36b76eb8f25cf137356a3" title="The destructor of HdlcdClient objects. " alt="" coords="189,5,369,32"/>
+<area shape="rect" id="node3" href="classHdlcdClient.html#ad9642ace6e882acdef5149401230b52c" title="Send a single control packet to the peer entity. " alt="" coords="213,56,346,83"/>
 </map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a2d7d399fabe34c244867798aab304aa3"></a>
+<a class="anchor" id="ab7fdcd25b70b9a707ef63bc697078e82"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -320,7 +350,7 @@ Here is the caller graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
-          <td class="paramname"><em>a_OnSendDoneCallback</em> = <code>std::function&lt;void()&gt;()</code>&#160;</td>
+          <td class="paramname"><em>a_OnSendDoneCallback</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -345,11 +375,11 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00196">196</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00206">206</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a5cbabf6359bc2b260bfd29baeabfae68"></a>
+<a class="anchor" id="ad9642ace6e882acdef5149401230b52c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -366,7 +396,7 @@ Here is the caller graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
-          <td class="paramname"><em>a_OnSendDoneCallback</em> = <code>std::function&lt;void()&gt;()</code>&#160;</td>
+          <td class="paramname"><em>a_OnSendDoneCallback</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -391,14 +421,15 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00214">214</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00226">226</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classHdlcdClient_a5cbabf6359bc2b260bfd29baeabfae68_cgraph.png" border="0" usemap="#classHdlcdClient_a5cbabf6359bc2b260bfd29baeabfae68_cgraph" alt=""/></div>
-<map name="classHdlcdClient_a5cbabf6359bc2b260bfd29baeabfae68_cgraph" id="classHdlcdClient_a5cbabf6359bc2b260bfd29baeabfae68_cgraph">
-<area shape="rect" id="node2" href="classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d" title="Close the client entity. " alt="" coords="187,5,323,32"/>
+<div class="center"><img src="classHdlcdClient_ad9642ace6e882acdef5149401230b52c_cgraph.png" border="0" usemap="#classHdlcdClient_ad9642ace6e882acdef5149401230b52c_cgraph" alt=""/></div>
+<map name="classHdlcdClient_ad9642ace6e882acdef5149401230b52c_cgraph" id="classHdlcdClient_ad9642ace6e882acdef5149401230b52c_cgraph">
+<area shape="rect" id="node2" href="classHdlcdSessionHeader.html#a1785e81464eefab72618df7df5e012ae" title="HdlcdSessionHeader\l::Create" alt="" coords="187,5,341,47"/>
+<area shape="rect" id="node3" href="classHdlcdClient.html#a6432392d6eeb5321cb2d13e24e09f52d" title="Close the client entity. " alt="" coords="196,71,332,98"/>
 </map>
 </div>
 </p>
@@ -436,7 +467,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00185">185</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00195">195</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -471,7 +502,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00175">175</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00185">185</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -506,7 +537,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00165">165</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00175">175</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -534,7 +565,7 @@ Here is the call graph for this function:</div>
 <p>Shuts all TCP connections down. </p>
 <p>Initiates a shutdown procedure for correct teardown of all TCP connections </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00120">120</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00130">130</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
