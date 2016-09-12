@@ -233,7 +233,7 @@ private:
                     // The frame is complete
                     if (m_OnFrameCallback) {
                         // Deliver the data packet but maybe stall the receiver
-                        l_bAcceptsSubsequentFrames = m_OnFrameCallback(m_IncomingFrame);
+                        l_bAcceptsSubsequentFrames = m_OnFrameCallback(std::move(m_IncomingFrame));
                     } // if
                     
                     m_IncomingFrame.reset();
