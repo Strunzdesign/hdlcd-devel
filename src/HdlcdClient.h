@@ -55,49 +55,59 @@ class HdlcdClient {
 public:
     /*! \brief The constructor of HdlcdClient objects
      * 
-     *  The connection is established on instantiation (RAII)
+     *  The constructor of HdlcdClient objects
      * 
      *  \param a_IOService the boost IOService object
-     *  \param a_EndpointIterator the boost endpoint iteratior referring to the destination
      *  \param a_SerialPortName the name of the serial port device
      *  \param a_ServiceAccessPointSpecifier the numerical indentifier of the service access protocol
      */
-    HdlcdClient(boost::asio::io_service& a_IOService, boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, const std::string &a_SerialPortName, uint16_t a_ServiceAccessPointSpecifier):
+    HdlcdClient(boost::asio::io_service& a_IOService, const std::string &a_SerialPortName, uint16_t a_ServiceAccessPointSpecifier):
         m_IOService(a_IOService),
+        m_SerialPortName(a_SerialPortName),
+        m_ServiceAccessPointSpecifier(a_ServiceAccessPointSpecifier),
         m_bClosed(false),
         m_TcpSocketData(a_IOService),
-        m_TcpSocketCtrl(a_IOService) {
+        m_TcpSocketCtrl(a_IOService),
+        m_eTcpSocketDataState(SOCKET_STATE_ERROR),
+        m_eTcpSocketCtrlState(SOCKET_STATE_ERROR) {
+    }
+    
+    
+    /*! \brief Perform an asynchronous connect procedure regarding both TCP sockets
+     * 
+     *  Perform an asynchronous connect procedure regarding both TCP sockets
+     * 
+     *  \param a_EndpointIterator the boost endpoint iteratior referring to the destination
+     *  \param a_OnConnectedCallback the callback to be called if a result is available.
+     */
+    void AsyncConnect(boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::function<void(bool a_bSuccess)> a_OnConnectedCallback) {
+        // Checks
+        assert(a_OnConnectedCallback);
+        assert(m_eTcpSocketDataState == SOCKET_STATE_ERROR); // not tried yet, or retrying
+        assert(m_eTcpSocketCtrlState == SOCKET_STATE_ERROR); // not tried yet, or retrying
+
         // Connect the data socket
-        boost::asio::async_connect(m_TcpSocketData, a_EndpointIterator,
-                                   [this, a_SerialPortName, a_ServiceAccessPointSpecifier](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
+        m_OnConnectedCallback = a_OnConnectedCallback;
+        m_eTcpSocketDataState = SOCKET_STATE_CONNECTING;
+        boost::asio::async_connect(m_TcpSocketData, a_EndpointIterator, [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (a_ErrorCode) {
                 std::cerr << "Unable to connect to the HDLC daemon (data socket)" << std::endl;
-                Close();
+                OnTcpSocketDataConnected(false);
             } else {
-                // Create and start the packet endpoint for the exchange of user data packets
-                m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketData));
-                m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
-                m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
-                m_PacketEndpointData->Start();
-                m_PacketEndpointData->Send(HdlcdSessionHeader::Create(a_ServiceAccessPointSpecifier, a_SerialPortName));
+                OnTcpSocketDataConnected(true);
             } // else
         });
         
         // Connect the control socket
-        boost::asio::async_connect(m_TcpSocketCtrl, a_EndpointIterator,
-                                   [this, a_SerialPortName](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
+        m_eTcpSocketCtrlState = SOCKET_STATE_CONNECTING;
+        boost::asio::async_connect(m_TcpSocketCtrl, a_EndpointIterator, [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (a_ErrorCode) {
                 std::cerr << "Unable to connect to the HDLC daemon (control socket)" << std::endl;
-                Close();
+                OnTcpSocketCtrlConnected(false);
             } else {
-                // Create and start the packet endpoint for the exchange of control packets
-                m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketCtrl));
-                m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ return OnCtrlReceived(a_PacketCtrl); });
-                m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
-                m_PacketEndpointCtrl->Start();
-                m_PacketEndpointCtrl->Send(HdlcdSessionHeader::Create(0x10, a_SerialPortName)); // 0x10: control flow only
+                OnTcpSocketCtrlConnected(true);
             } // else
         });
     }
@@ -226,7 +236,101 @@ public:
         return l_bRetVal;
     }
     
-private:    
+private:
+    /*! \brief Indicate that the data socket was established or that an error occured
+     * 
+     *  Internal helper: indicate that the data socket was established or that an error occured
+     * 
+     *  \param l_bSuccess to indicate whether the data socket was successfully connected or not
+     */
+    void OnTcpSocketDataConnected(bool l_bSuccess) {
+        // Checks
+        assert(m_eTcpSocketDataState == SOCKET_STATE_CONNECTING);
+        if (l_bSuccess) {
+            m_eTcpSocketDataState = SOCKET_STATE_CONNECTED;
+        } // if
+        
+        OnTcpSocketConnected();
+    }
+
+    /*! \brief Indicate that the control socket was established or that an error occured
+     * 
+     *  Internal helper: indicate that the control socket was established or that an error occured
+     * 
+     *  \param l_bSuccess to indicate whether the control socket was successfully connected or not
+     */
+    void OnTcpSocketCtrlConnected(bool l_bSuccess) {
+        // Checks
+        assert(m_eTcpSocketCtrlState == SOCKET_STATE_CONNECTING);
+        if (l_bSuccess) {
+            m_eTcpSocketCtrlState = SOCKET_STATE_CONNECTED;
+        } // if
+        
+        OnTcpSocketConnected();
+    }
+    
+    /*! \brief Indicate that one of both sockets were connetced or that an error happened
+     * 
+     *  Internal helper: if a status regarding both sockets is available trigger the callback and maybe start subsequent activity
+     */
+    void OnTcpSocketConnected() {
+        // Checks
+        if ((m_eTcpSocketDataState == SOCKET_STATE_CONNECTING) && (m_eTcpSocketCtrlState == SOCKET_STATE_CONNECTING)) {
+            // Invalid state
+            assert(false);
+            return;
+        } // if
+        
+        if ((m_eTcpSocketDataState == SOCKET_STATE_CONNECTED) && (m_eTcpSocketCtrlState == SOCKET_STATE_CONNECTED)) {
+            // Success!
+            // Create and start the packet endpoint for the exchange of user data packets
+            m_PacketEndpointData = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketData));
+            m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
+            m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
+            m_PacketEndpointData->Start();
+            m_PacketEndpointData->Send(HdlcdSessionHeader::Create(m_ServiceAccessPointSpecifier, m_SerialPortName));
+            
+            // Create and start the packet endpoint for the exchange of control packets
+            m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketCtrl));
+            m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ return OnCtrlReceived(a_PacketCtrl); });
+            m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
+            m_PacketEndpointCtrl->Start();
+            m_PacketEndpointCtrl->Send(HdlcdSessionHeader::Create(0x10, m_SerialPortName)); // 0x10: control flow only
+            m_OnConnectedCallback(true);
+            return;
+        } // if
+        
+        if ((m_eTcpSocketDataState == SOCKET_STATE_CONNECTING) || (m_eTcpSocketCtrlState == SOCKET_STATE_CONNECTING)) {
+            // Needs to wait for the second socket
+            return;
+        } // if
+        
+        
+        if (m_eTcpSocketDataState == SOCKET_STATE_CONNECTED) {
+            // The control socket failed after the data socket succeeded
+            assert(m_eTcpSocketCtrlState == SOCKET_STATE_ERROR);
+            m_eTcpSocketDataState = SOCKET_STATE_ERROR;
+            m_TcpSocketData.close();
+            m_OnConnectedCallback(false);
+            return;
+        } // else if
+        
+        if (m_eTcpSocketCtrlState == SOCKET_STATE_CONNECTED) {
+            // The data socket failed after the control socket succeeded
+            assert(m_eTcpSocketDataState == SOCKET_STATE_ERROR);
+            m_eTcpSocketCtrlState = SOCKET_STATE_ERROR;
+            m_TcpSocketCtrl.close();
+            m_OnConnectedCallback(false);
+            return;
+        } // else if
+        
+        // Both sockets failed
+        assert(m_eTcpSocketDataState == SOCKET_STATE_ERROR);
+        assert(m_eTcpSocketCtrlState == SOCKET_STATE_ERROR);
+        m_OnConnectedCallback(false);
+        return;
+    }
+    
     /*! \brief Internal callback method to be called on reception of data packets
      * 
      *  This is an internal callback method to be called on reception of data packets
@@ -262,10 +366,21 @@ private:
     }
     
     // Members
-    boost::asio::io_service& m_IOService;
+    boost::asio::io_service& m_IOService; //!< The boost IOService object
+    const std::string m_SerialPortName; //!< The name of the serial port to connect to a device
+    const uint16_t m_ServiceAccessPointSpecifier; //!< The service access point specifier regarding the protocol specification
     bool m_bClosed; //!< Indicates whether the HDLCd access protocol entity has already been closed
+    
+    std::function<void(bool a_bSuccess)> m_OnConnectedCallback;
     boost::asio::ip::tcp::socket m_TcpSocketData; //!< The TCP socket dedicated to user data
     boost::asio::ip::tcp::socket m_TcpSocketCtrl; //!< The TCP socket dedicated to control data
+    typedef enum {
+        SOCKET_STATE_ERROR      = 0,
+        SOCKET_STATE_CONNECTING = 1,
+        SOCKET_STATE_CONNECTED  = 2,
+    } E_SOCKET_STATE;
+    E_SOCKET_STATE m_eTcpSocketDataState; //!< The state of the TCP data socket
+    E_SOCKET_STATE m_eTcpSocketCtrlState; //!< The state of the TCP control socket
     
     std::shared_ptr<HdlcdPacketEndpoint> m_PacketEndpointData; //!< The packet endpoint class responsible for the connected data socket
     std::shared_ptr<HdlcdPacketEndpoint> m_PacketEndpointCtrl; //!< The packet endpoint class responsible for the connected control socket
