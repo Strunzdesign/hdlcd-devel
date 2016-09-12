@@ -107,9 +107,9 @@ public:
      *  All open connections will automatically be closed by the destructor
      */
     ~HdlcdClient() {
-        m_OnDataCallback = NULL;
-        m_OnCtrlCallback = NULL;
-        m_OnClosedCallback = NULL;
+        m_OnDataCallback   = nullptr;
+        m_OnCtrlCallback   = nullptr;
+        m_OnClosedCallback = nullptr;
         Close();
     }
 
@@ -193,12 +193,14 @@ public:
      *  \param a_PacketData the data packet to be transmitted
      *  \param a_OnSendDoneCallback the callback handler to be called if the provided data packet was sent (optional)
      */
-    bool Send(const HdlcdPacketData& a_PacketData, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
+    bool Send(const HdlcdPacketData& a_PacketData, std::function<void()> a_OnSendDoneCallback = nullptr) {
         bool l_bRetVal = false;
         if (m_PacketEndpointData) {
             l_bRetVal = m_PacketEndpointData->Send(a_PacketData, a_OnSendDoneCallback);
         } else {
-            m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+            if (a_OnSendDoneCallback) {
+                m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+            } // if
         } // else
         
         return l_bRetVal;
@@ -211,12 +213,14 @@ public:
      *  \param a_PacketCtrl the control packet to be transmitted
      *  \param a_OnSendDoneCallback the callback handler to be called if the provided control packet was sent (optional)
      */
-    bool Send(const HdlcdPacketCtrl& a_PacketCtrl, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
+    bool Send(const HdlcdPacketCtrl& a_PacketCtrl, std::function<void()> a_OnSendDoneCallback = nullptr) {
         bool l_bRetVal = false;
         if (m_PacketEndpointCtrl) {
             l_bRetVal= m_PacketEndpointCtrl->Send(a_PacketCtrl, a_OnSendDoneCallback);
         } else {
-            m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+            if (a_OnSendDoneCallback) {
+                m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+            } // if
         } // else
 
         return l_bRetVal;

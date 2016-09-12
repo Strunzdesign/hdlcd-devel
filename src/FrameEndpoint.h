@@ -139,9 +139,12 @@ public:
         } // if
     }
     
-    bool SendFrame(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
+    bool SendFrame(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = nullptr) {
         if (m_SEPState == SEPSTATE_SHUTDOWN) {
-            m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+            if (a_OnSendDoneCallback) {
+                m_IOService.post([a_OnSendDoneCallback](){ a_OnSendDoneCallback(); });
+            } // if
+
             return false;
         } // if
 
@@ -163,11 +166,11 @@ public:
         return true;
     }
     
-    void SetOnFrameCallback(std::function<bool(std::shared_ptr<Frame>)> a_OnFrameCallback = std::function<bool(std::shared_ptr<Frame>)>()) {
+    void SetOnFrameCallback(std::function<bool(std::shared_ptr<Frame>)> a_OnFrameCallback) {
         m_OnFrameCallback = a_OnFrameCallback;
     }
     
-    void SetOnClosedCallback(std::function<void()> a_OnClosedCallback = std::function<void()>()) {
+    void SetOnClosedCallback(std::function<void()> a_OnClosedCallback) {
         m_OnClosedCallback = a_OnClosedCallback;
     }
 

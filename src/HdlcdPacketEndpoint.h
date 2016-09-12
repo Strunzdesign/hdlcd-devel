@@ -63,9 +63,9 @@ public:
     }
     
     ~HdlcdPacketEndpoint() {
-        m_OnDataCallback = NULL;
-        m_OnCtrlCallback = NULL;
-        m_OnClosedCallback = NULL;
+        m_OnDataCallback   = nullptr;
+        m_OnCtrlCallback   = nullptr;
+        m_OnClosedCallback = nullptr;
         Close();
     }
             
@@ -82,7 +82,7 @@ public:
         m_OnClosedCallback = a_OnClosedCallback;
     }
     
-    bool Send(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = std::function<void()>()) {
+    bool Send(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = nullptr) {
         return (m_FrameEndpoint->SendFrame(a_Frame, a_OnSendDoneCallback));
     }
     
