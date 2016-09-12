@@ -63,8 +63,8 @@ public:
     
     ~FrameEndpoint() {
         // Drop all callbacks and assure that close was called
-        m_OnFrameCallback  = NULL;
-        m_OnClosedCallback = NULL;
+        m_OnFrameCallback  = nullptr;
+        m_OnClosedCallback = nullptr;
         Close();
     }
     
