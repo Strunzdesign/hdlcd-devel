@@ -92,7 +92,6 @@ public:
         boost::asio::async_connect(m_TcpSocketData, a_EndpointIterator, [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (a_ErrorCode) {
-                std::cerr << "Unable to connect to the HDLC daemon (data socket)" << std::endl;
                 OnTcpSocketDataConnected(false);
             } else {
                 OnTcpSocketDataConnected(true);
@@ -104,7 +103,6 @@ public:
         boost::asio::async_connect(m_TcpSocketCtrl, a_EndpointIterator, [this](boost::system::error_code a_ErrorCode, boost::asio::ip::tcp::resolver::iterator) {
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (a_ErrorCode) {
-                std::cerr << "Unable to connect to the HDLC daemon (control socket)" << std::endl;
                 OnTcpSocketCtrlConnected(false);
             } else {
                 OnTcpSocketCtrlConnected(true);
