@@ -248,7 +248,9 @@ private:
         assert(m_eTcpSocketDataState == SOCKET_STATE_CONNECTING);
         if (l_bSuccess) {
             m_eTcpSocketDataState = SOCKET_STATE_CONNECTED;
-        } // if
+        } else {
+            m_eTcpSocketDataState = SOCKET_STATE_ERROR;
+	} // else
         
         OnTcpSocketConnected();
     }
@@ -264,7 +266,9 @@ private:
         assert(m_eTcpSocketCtrlState == SOCKET_STATE_CONNECTING);
         if (l_bSuccess) {
             m_eTcpSocketCtrlState = SOCKET_STATE_CONNECTED;
-        } // if
+        } else {
+            m_eTcpSocketCtrlState = SOCKET_STATE_ERROR;
+	} // else
         
         OnTcpSocketConnected();
     }
