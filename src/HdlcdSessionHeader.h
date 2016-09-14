@@ -1,5 +1,5 @@
 /**
- * \file      HdlcdPacketData.h
+ * \file      HdlcdSessionHeader.h
  * \brief 
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
@@ -40,13 +40,14 @@
 #include "Frame.h"
 #include <memory>
 #include <string>
+#include "HdlcdSessionDescriptor.h"
 
 class HdlcdSessionHeader: public Frame {
 public:
-    static HdlcdSessionHeader Create(uint8_t a_ServiceAccessPointSpecifier, const std::string& a_SerialPortName) {
+    static HdlcdSessionHeader Create(HdlcdSessionDescriptor a_HdlcdSessionDescriptor, const std::string& a_SerialPortName) {
         // Called for transmission
         HdlcdSessionHeader l_HdlcdSessionHeader;
-        l_HdlcdSessionHeader.m_ServiceAccessPointSpecifier = a_ServiceAccessPointSpecifier;
+        l_HdlcdSessionHeader.m_ServiceAccessPointSpecifier = a_HdlcdSessionDescriptor;
         l_HdlcdSessionHeader.m_SerialPortName = a_SerialPortName;
         return l_HdlcdSessionHeader;
     }

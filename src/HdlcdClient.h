@@ -59,19 +59,18 @@ public:
      * 
      *  \param a_IOService the boost IOService object
      *  \param a_SerialPortName the name of the serial port device
-     *  \param a_ServiceAccessPointSpecifier the numerical indentifier of the service access protocol
+     *  \param a_HdlcdSessionDescriptor the indentifier of the session, see "service access point"
      */
-    HdlcdClient(boost::asio::io_service& a_IOService, const std::string &a_SerialPortName, uint16_t a_ServiceAccessPointSpecifier):
+    HdlcdClient(boost::asio::io_service& a_IOService, const std::string &a_SerialPortName, HdlcdSessionDescriptor a_HdlcdSessionDescriptor):
         m_IOService(a_IOService),
         m_SerialPortName(a_SerialPortName),
-        m_ServiceAccessPointSpecifier(a_ServiceAccessPointSpecifier),
+        m_HdlcdSessionDescriptor(a_HdlcdSessionDescriptor),
         m_bClosed(false),
         m_TcpSocketData(a_IOService),
         m_TcpSocketCtrl(a_IOService),
         m_eTcpSocketDataState(SOCKET_STATE_ERROR),
         m_eTcpSocketCtrlState(SOCKET_STATE_ERROR) {
     }
-    
     
     /*! \brief Perform an asynchronous connect procedure regarding both TCP sockets
      * 
@@ -290,14 +289,14 @@ private:
             m_PacketEndpointData->SetOnDataCallback([this](std::shared_ptr<const HdlcdPacketData> a_PacketData){ return OnDataReceived(a_PacketData); });
             m_PacketEndpointData->SetOnClosedCallback([this](){ OnClosed(); });
             m_PacketEndpointData->Start();
-            m_PacketEndpointData->Send(HdlcdSessionHeader::Create(m_ServiceAccessPointSpecifier, m_SerialPortName));
+            m_PacketEndpointData->Send(HdlcdSessionHeader::Create(m_HdlcdSessionDescriptor, m_SerialPortName));
             
             // Create and start the packet endpoint for the exchange of control packets
             m_PacketEndpointCtrl = std::make_shared<HdlcdPacketEndpoint>(m_IOService, std::make_shared<FrameEndpoint>(m_IOService, m_TcpSocketCtrl));
             m_PacketEndpointCtrl->SetOnCtrlCallback([this](const HdlcdPacketCtrl& a_PacketCtrl){ return OnCtrlReceived(a_PacketCtrl); });
             m_PacketEndpointCtrl->SetOnClosedCallback([this](){ OnClosed(); });
             m_PacketEndpointCtrl->Start();
-            m_PacketEndpointCtrl->Send(HdlcdSessionHeader::Create(0x10, m_SerialPortName)); // 0x10: control flow only
+            m_PacketEndpointCtrl->Send(HdlcdSessionHeader::Create(HdlcdSessionDescriptor(SESSION_TYPE_TRX_STATUS, SESSION_FLAGS_NONE), m_SerialPortName));
             m_OnConnectedCallback(true);
             return;
         } // if
@@ -370,7 +369,7 @@ private:
     // Members
     boost::asio::io_service& m_IOService; //!< The boost IOService object
     const std::string m_SerialPortName; //!< The name of the serial port to connect to a device
-    const uint16_t m_ServiceAccessPointSpecifier; //!< The service access point specifier regarding the protocol specification
+    const HdlcdSessionDescriptor m_HdlcdSessionDescriptor; //!< The service access point specifier regarding the protocol specification
     bool m_bClosed; //!< Indicates whether the HDLCd access protocol entity has already been closed
     
     std::function<void(bool a_bSuccess)> m_OnConnectedCallback;
