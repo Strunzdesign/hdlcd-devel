@@ -97,9 +97,10 @@ public:
         m_SendBufferOffset = 0;
         m_bStarted = true;
         m_SEPState = SEPSTATE_CONNECTED;
-        TriggerNextFrame();
+        auto self(shared_from_this());
+        m_IOService.post([this, self](){ TriggerNextFrame(); });
         if (!m_SendQueue.empty()) {
-            DoWrite();
+            m_IOService.post([this, self](){ DoWrite(); });
         } // if
     }
     
@@ -128,11 +129,11 @@ public:
         if ((m_bStarted) && (!m_bStopped) && (m_SEPState == SEPSTATE_CONNECTED)) {
             // Consume all bytes as long as frames are consumed
             bool l_bDeliverSubsequentFrames = true;
-            while ((m_ReadBufferOffset < m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames)) {
+            while ((m_ReadBufferOffset < m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames) && (!m_bStopped)) {
                 l_bDeliverSubsequentFrames = EvaluateReadBuffer();
             } // while
             
-            if ((m_ReadBufferOffset == m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames)) {
+            if ((m_ReadBufferOffset == m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames) && (!m_bStopped)) {
                 // No bytes available anymore / yet
                 ReadNextChunk();
             } // if
@@ -176,8 +177,8 @@ public:
 
 private:
     void ReadNextChunk() {
-        if (m_bReceiving) {
-            // A later trigger will happen!
+        if (m_bStopped || m_bReceiving) {
+            // Already stopped / a later trigger will happen
             return;
         } // if
 
@@ -189,9 +190,9 @@ private:
         auto self(shared_from_this());
         if (m_bStopped) return;
         m_TcpSocket.async_read_some(boost::asio::buffer(m_ReadBuffer, E_MAX_LENGTH),[this, self](boost::system::error_code a_ErrorCode, std::size_t a_BytesRead) {
-            m_bReceiving = false;
             if (a_ErrorCode == boost::asio::error::operation_aborted) return;
             if (m_bStopped) return;
+            m_bReceiving = false;
             if (a_ErrorCode) {
                 std::cerr << "Read error on TCP socket: " << a_ErrorCode << ", closing" << std::endl;
                 Close();
@@ -220,7 +221,7 @@ private:
                 assert(m_IncomingFrame);
             } // else
         } // else
-        
+
         if (m_IncomingFrame) {
             // Feed the waiting frame with data
             assert(m_IncomingFrame->BytesNeeded() != 0);

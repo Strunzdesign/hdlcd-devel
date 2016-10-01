@@ -90,10 +90,11 @@ public:
         assert(m_bStarted == false);
         assert(m_bStopped == false);
         m_bStarted = true;
+        auto self(shared_from_this());
         if (m_FrameEndpoint->GetWasStarted()) {
-            m_FrameEndpoint->TriggerNextFrame();
+            m_IOService.post([this, self](){ m_FrameEndpoint->TriggerNextFrame(); });
         } else {
-            m_FrameEndpoint->Start();
+            m_IOService.post([this, self](){ m_FrameEndpoint->Start(); });
         } // else
 
         StartKeepAliveTimer();
