@@ -20,6 +20,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "HdlcdPacketEndpoint.h", "HdlcdPacketEndpoint_8h.html", [
       [ "HdlcdPacketEndpoint", "classHdlcdPacketEndpoint.html", "classHdlcdPacketEndpoint" ]
     ] ],
+    [ "HdlcdSessionDescriptor.h", "HdlcdSessionDescriptor_8h.html", "HdlcdSessionDescriptor_8h" ],
     [ "HdlcdSessionHeader.h", "HdlcdSessionHeader_8h.html", [
       [ "HdlcdSessionHeader", "classHdlcdSessionHeader.html", "classHdlcdSessionHeader" ]
     ] ]

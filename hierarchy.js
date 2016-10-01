@@ -11,5 +11,6 @@ var hierarchy =
       ] ],
       [ "HdlcdSessionHeader", "classHdlcdSessionHeader.html", null ]
     ] ],
-    [ "HdlcdClient", "classHdlcdClient.html", null ]
+    [ "HdlcdClient", "classHdlcdClient.html", null ],
+    [ "HdlcdSessionDescriptor", "classHdlcdSessionDescriptor.html", null ]
 ];

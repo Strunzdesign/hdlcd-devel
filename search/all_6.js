@@ -11,6 +11,7 @@ var searchData=
   ['getreliable',['GetReliable',['../classHdlcdPacketData.html#a8507220f68c484c80527e708a85d0034',1,'HdlcdPacketData']]],
   ['getserialportname',['GetSerialPortName',['../classHdlcdSessionHeader.html#abe05e7c0fb98a83549d0210de5186bff',1,'HdlcdSessionHeader']]],
   ['getserviceaccesspointspecifier',['GetServiceAccessPointSpecifier',['../classHdlcdSessionHeader.html#a9d3e518746201d5fd66b2e3b2e7b0f27',1,'HdlcdSessionHeader']]],
+  ['getsessiontype',['GetSessionType',['../classHdlcdSessionDescriptor.html#a3b66e3fe3bd071b2b5dd0b355e214899',1,'HdlcdSessionDescriptor']]],
   ['getwassent',['GetWasSent',['../classHdlcdPacketData.html#a3e3ed17e50f5689f9f044c62582f3194',1,'HdlcdPacketData']]],
   ['getwasstarted',['GetWasStarted',['../classFrameEndpoint.html#a9e2f8f8f92f8f2dd56b43788ff32326b',1,'FrameEndpoint']]]
 ];
