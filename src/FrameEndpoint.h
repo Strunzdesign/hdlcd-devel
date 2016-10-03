@@ -98,7 +98,7 @@ public:
         m_bStarted = true;
         m_SEPState = SEPSTATE_CONNECTED;
         auto self(shared_from_this());
-        m_IOService.post([this, self](){ TriggerNextFrame(); });
+        TriggerNextFrame();
         if (!m_SendQueue.empty()) {
             m_IOService.post([this, self](){ DoWrite(); });
         } // if
@@ -126,18 +126,21 @@ public:
             return;
         } // if
         
-        if ((m_bStarted) && (!m_bStopped) && (m_SEPState == SEPSTATE_CONNECTED)) {
-            // Consume all bytes as long as frames are consumed
-            bool l_bDeliverSubsequentFrames = true;
-            while ((m_ReadBufferOffset < m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames) && (!m_bStopped)) {
-                l_bDeliverSubsequentFrames = EvaluateReadBuffer();
-            } // while
-            
-            if ((m_ReadBufferOffset == m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames) && (!m_bStopped)) {
-                // No bytes available anymore / yet
-                ReadNextChunk();
+        auto self(shared_from_this());
+        m_IOService.post([this,self](){
+            if ((m_bStarted) && (!m_bStopped) && (m_SEPState == SEPSTATE_CONNECTED)) {
+                // Consume all bytes as long as frames are consumed
+                bool l_bDeliverSubsequentFrames = true;
+                while ((m_ReadBufferOffset < m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames) && (!m_bStopped)) {
+                    l_bDeliverSubsequentFrames = EvaluateReadBuffer();
+                } // while
+                
+                if ((m_ReadBufferOffset == m_BytesInReadBuffer) && (l_bDeliverSubsequentFrames) && (!m_bStopped)) {
+                    // No bytes available anymore / yet
+                    ReadNextChunk();
+                } // if
             } // if
-        } // if
+        }); // post
     }
     
     bool SendFrame(const Frame& a_Frame, std::function<void()> a_OnSendDoneCallback = nullptr) {
