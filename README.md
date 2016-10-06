@@ -11,10 +11,10 @@ seperate repositories:
 - https://github.com/Strunzdesign/snet-tools
 
 Stable releases of the HDLCd include files:
-- none yet
+- v1.0 from 06.10.2016
 
 Current state:
-- Before 28.08.2016, these files were part of the hdlcd repository (up to release v1.2),
+- v1.1pre (git master branch)
 
 Required libraries and tools:
 - None. This repository does only contain C++ header files.
