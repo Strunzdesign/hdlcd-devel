@@ -1,0 +1,3 @@
+[submodule "libs/framing"]
+	path = libs/framing
+	url = https://github.com/Strunzdesign/framing.git
