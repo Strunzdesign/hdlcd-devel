@@ -51,7 +51,7 @@ The header files will be installed to "C:\hdlcd-devel\include" if not specified 
 
 Update and reompile your local repository (same for all OS):
 ---
-1.) cd snet-devel
+1.) cd hdlcd-devel
 2.) git pull
 3.) git submodule update
 4.) cd build
