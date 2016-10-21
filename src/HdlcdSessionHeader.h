@@ -57,7 +57,7 @@ public:
      *  \param  a_HdlcdSessionDescriptor the service access point specifier octett
      *  \param  a_SerialPortName the file name of the serial port
      * 
-     *  \return HdlcdSessionHeader the created HDLCd session header object
+     *  \return The created HDLCd session header object
      */
     static HdlcdSessionHeader Create(HdlcdSessionDescriptor a_HdlcdSessionDescriptor, const std::string& a_SerialPortName) {
         // Called for transmission
@@ -69,7 +69,7 @@ public:
 
     /*! \brief  Static creator to create an object in the process of reception
      * 
-     *  \return std::shared_ptr<HdlcdSessionHeader> the created but empty HDLCd session header object
+     *  \return The created but empty HDLCd session header object
      */
     static std::shared_ptr<HdlcdSessionHeader> CreateDeserializedFrame() {
         // Called on reception
@@ -81,7 +81,7 @@ public:
     
     /*! \brief  Query the service access point specifier octett
      * 
-     *  \return uint8_t the service access point specifier octett
+     *  \return The service access point specifier octett
      */
     uint8_t GetServiceAccessPointSpecifier() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
@@ -90,7 +90,7 @@ public:
 
     /*! \brief  Query the file name of the serial port
      * 
-     *  \return const std::string& the file name of the serial port
+     *  \return The file name of the serial port
      */
     const std::string& GetSerialPortName() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
@@ -109,7 +109,7 @@ private:
      * 
      *  The serializer creates a buffer of bytes containing the assembled HDLCd session header ready for transmission
      * 
-     *  \return std::vector<unsigned char> the buffer of bytes containing the assembled HDLCd session header
+     *  \return The buffer of bytes containing the assembled HDLCd session header
      */
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
@@ -127,7 +127,7 @@ private:
      * 
      *  \retval true no error occured
      *  \retval false a protocol violation was detected
-     *  \return bool to indicate whether parsing the available bytes succeeded
+     *  \return Indicates whether parsing the available bytes succeeded
      */
     bool Deserialize() {
         // All requested bytes are available

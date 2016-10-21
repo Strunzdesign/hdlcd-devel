@@ -204,7 +204,7 @@ public:
      * 
      *  \retval true the data packet was enqueued for transmission
      *  \retval false the data packet was not enqueued, e.g., the send queue was full or a problem with one of the sockets occured
-     *  \return bool indicates whether the provided data packet was successfully enqueued for transmitted
+     *  \return Indicates whether the provided data packet was successfully enqueued for transmitted
      */
     bool Send(const HdlcdPacketData& a_PacketData, std::function<void()> a_OnSendDoneCallback = nullptr) {
         bool l_bRetVal = false;
@@ -228,7 +228,7 @@ public:
      * 
      *  \retval true the control packet was enqueued for transmission
      *  \retval false the control packet was not enqueued, e.g., the send queue was full or a problem with one of the sockets occured
-     *  \return bool indicates whether the provided control packet was successfully enqueued for transmitted
+     *  \return Indicates whether the provided control packet was successfully enqueued for transmitted
      */
     bool Send(const HdlcdPacketCtrl& a_PacketCtrl, std::function<void()> a_OnSendDoneCallback = nullptr) {
         bool l_bRetVal = false;
@@ -350,7 +350,7 @@ private:
      * 
      *  \retval true demand for delivey of subsequent packets
      *  \retval false no subsequent packets must be delivered before the next explicit poll
-     *  \return bool indicates whether the receiver should be stalled
+     *  \return Indicates whether the receiver should be stalled
      */
     bool OnDataReceived(std::shared_ptr<const HdlcdPacketData> a_PacketData) {
         if (m_OnDataCallback) {

@@ -125,7 +125,7 @@ public:
     
     /*! \brief  Query the service access point specifier octett
      * 
-     *  \return uint8_t the service access point specifier octett
+     *  \return The service access point specifier octett
      */
     operator uint8_t() const {
         return m_ServiceAccessPointSpecifier;
@@ -133,7 +133,7 @@ public:
 
     /*! \brief  Query the session type
      * 
-     *  \return E_SESSION_TYPE the session type enum
+     *  \return The session type
      */
     E_SESSION_TYPE GetSessionType() const {
         return E_SESSION_TYPE(m_ServiceAccessPointSpecifier & SESSION_TYPE_MASK);
@@ -143,7 +143,7 @@ public:
      * 
      *  \retval true data packets received from the HDLCd should be delivered
      *  \retval false data packets received from the HDLCd should be ignored
-     *  \return bool indicates whether data packets received from the HDLCd should be delivered or ignored
+     *  \return Indicates whether data packets received from the HDLCd should be delivered or ignored
      */
     bool DeliversRcvdData() const {
         return (m_ServiceAccessPointSpecifier & SESSION_FLAGS_DELIVER_RCVD);
@@ -153,7 +153,7 @@ public:
      * 
      *  \retval true data packets sent to a device should be delivered
      *  \retval false data packets sent to a device should be ignored
-     *  \return bool indicates whether data packets sent to a device should be delivered or ignored
+     *  \return Indicates whether data packets sent to a device should be delivered or ignored
      */
     bool DeliversSentData() const {
         return (m_ServiceAccessPointSpecifier & SESSION_FLAGS_DELIVER_SENT);
@@ -163,7 +163,7 @@ public:
      * 
      *  \retval true invalid data packets with a broken CRC checksum should be delivered
      *  \retval false invalid data packets with a broken CRC checksum should be ignored
-     *  \return bool indicates whether invalid data packets with a broken CRC checksum should be delivered or ignored
+     *  \return Indicates whether invalid data packets with a broken CRC checksum should be delivered or ignored
      */
     bool DeliversInvalidData() const {
         return (m_ServiceAccessPointSpecifier & SESSION_FLAGS_DELIVER_INVALIDS);
