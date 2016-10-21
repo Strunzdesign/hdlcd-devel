@@ -152,9 +152,10 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a>. </p>
-<p>The main helper class to easily implement clients of the HDLCd access protocol </p>
+<p>The main helper class to easily implement clients of the HDLCd access protocol. It implements the HDLCd access protocol and makes use of two TCP sockets: one TCP socket is dedicated to the exchange of user data, the second solely to the exchange of control packets. However, all the socket handling is performed internally and is not visible to the user of this class.</p>
+<p>This class provides an asynchronous interface, but it can also be used in a quasi-synchronous way. </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00054">54</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00060">60</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a378874c8e004503e70ba1133385688da"></a>
 <div class="memitem">
@@ -205,7 +206,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00064">64</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00070">70</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -233,7 +234,7 @@ Public Member Functions</h2></td></tr>
 <p>The destructor of <a class="el" href="classHdlcdClient.html" title="Class HdlcdClient. ">HdlcdClient</a> objects. </p>
 <p>All open connections will automatically be closed by the destructor </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00116">116</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00122">122</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -290,7 +291,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00082">82</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00088">88</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -318,7 +319,7 @@ Here is the call graph for this function:</div>
 <p>Close the client entity. </p>
 <p>Close the client entity and all its TCP connections </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00141">141</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00147">147</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -366,16 +367,24 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Send a single data packet to the peer entity. </p>
-<p>Send a single data packet to the peer entity</p>
+<p>Send a single data packet to the peer entity. Due to the asynchronous mode the data packet is enqueued for later transmission.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a_PacketData</td><td>the data packet to be transmitted </td></tr>
-    <tr><td class="paramname">a_OnSendDoneCallback</td><td>the callback handler to be called if the provided data packet was sent (optional) </td></tr>
+    <tr><td class="paramname">a_OnSendDoneCallback</td><td>the callback handler to be called if the provided data packet was sent (optional)</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">true</td><td>the data packet was enqueued for transmission </td></tr>
+    <tr><td class="paramname">false</td><td>the data packet was not enqueued, e.g., the send queue was full or a problem with one of the sockets occured </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool indicates whether the provided data packet was successfully enqueued for transmitted </dd></dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00203">203</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00213">213</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -412,16 +421,24 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Send a single control packet to the peer entity. </p>
-<p>Send a single control packet to the peer entity</p>
+<p>Send a single control packet to the peer entity. Due to the asynchronous mode the control packet is enqueued for later transmission.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a_PacketCtrl</td><td>the control packet to be transmitted </td></tr>
-    <tr><td class="paramname">a_OnSendDoneCallback</td><td>the callback handler to be called if the provided control packet was sent (optional) </td></tr>
+    <tr><td class="paramname">a_OnSendDoneCallback</td><td>the callback handler to be called if the provided control packet was sent (optional)</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">true</td><td>the control packet was enqueued for transmission </td></tr>
+    <tr><td class="paramname">false</td><td>the control packet was not enqueued, e.g., the send queue was full or a problem with one of the sockets occured </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool indicates whether the provided control packet was successfully enqueued for transmitted </dd></dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00223">223</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00237">237</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -467,7 +484,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00192">192</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00198">198</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -502,7 +519,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00182">182</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00188">188</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -537,7 +554,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00172">172</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00178">178</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
@@ -565,7 +582,7 @@ Here is the call graph for this function:</div>
 <p>Shuts all TCP connections down. </p>
 <p>Initiates a shutdown procedure for correct teardown of all TCP connections </p>
 
-<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00127">127</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
+<p>Definition at line <a class="el" href="HdlcdClient_8h_source.html#l00133">133</a> of file <a class="el" href="HdlcdClient_8h_source.html">HdlcdClient.h</a>.</p>
 
 </div>
 </div>
