@@ -1,6 +1,8 @@
 /**
  * \file      HdlcdSessionDescriptor.h
- * \brief 
+ * \brief     This file contains the header declaration of class HdlcdSessionDescriptor
+ * \author    Florian Evers, florian-evers@gmx.de
+ * \copyright BSD 3 Clause licence
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
  * All rights reserved.
@@ -39,35 +41,60 @@
 
 #include <stdint.h>
 
-// Session types. Select only one!
+/*! enum E_SESSION_TYPE
+ *  \brief The enum E_SESSION_TYPE
+ * 
+ *  This enum specifies the set of available session types according to the HDLCd access protocol.
+ */
 typedef enum {
-    SESSION_TYPE_TRX_ALL              = 0x00,
-    SESSION_TYPE_TRX_STATUS           = 0x10,
-    SESSION_TYPE_RX_PAYLOAD           = 0x20,
-    SESSION_TYPE_RX_HDLC              = 0x30,
-    SESSION_TYPE_RX_HDLC_DISSECTED    = 0x40,
+    SESSION_TYPE_TRX_ALL              = 0x00, //!< Payload,          data read and write, port status read and write
+    SESSION_TYPE_TRX_STATUS           = 0x10, //!< Port status only, no data exchange,    port status read and write
+    SESSION_TYPE_RX_PAYLOAD           = 0x20, //!< Payload Raw,      data read only,      port status read only
+    SESSION_TYPE_RX_HDLC              = 0x30, //!< HDLC Raw,         data read only,      port status read only
+    SESSION_TYPE_RX_HDLC_DISSECTED    = 0x40, //!< HDLC dissected,   data read only,      port status read only
 
-    // Bookkeeping
-    SESSION_TYPE_ARITHMETIC_ENDMARKER = 0x50,
-    SESSION_TYPE_MASK                 = 0xF0,
-    SESSION_TYPE_UNSET                = 0xFF
+    // Book keeping
+    SESSION_TYPE_ARITHMETIC_ENDMARKER = 0x50, //!< The lowest invalid session type number 
+    SESSION_TYPE_MASK                 = 0xF0, //!< Bit mask to query the session type
+    SESSION_TYPE_UNSET                = 0xFF  //!< Invalid entry, to indicate unset state
 } E_SESSION_TYPE;
 
-// Multiple combination of flags are possible
+
+
+/*! enum E_SESSION_FLAGS
+ *  \brief The enum E_SESSION_FLAGS
+ * 
+ *  This enum specifies the set of available session flags according to the HDLCd access protocol.
+ *  Multiple combination of flags are possible
+ */
 typedef enum {
-    SESSION_FLAGS_NONE                = 0x00,
-    SESSION_FLAGS_DELIVER_RCVD        = 0x01,
-    SESSION_FLAGS_DELIVER_SENT        = 0x02,
-    SESSION_FLAGS_DELIVER_INVALIDS    = 0x04,
-    SESSION_FLAGS_RESERVED            = 0x08,
+    SESSION_FLAGS_NONE                = 0x00, //!< Empty list of flags
+    SESSION_FLAGS_DELIVER_RCVD        = 0x01, //!< Deliver data packets sent by the device and received by the HDLCd
+    SESSION_FLAGS_DELIVER_SENT        = 0x02, //!< Deliver data packets sent by the HDLCd and received by the device
+    SESSION_FLAGS_DELIVER_INVALIDS    = 0x04, //!< Deliver also invalid frames with broken CRC checksum
+    SESSION_FLAGS_RESERVED            = 0x08, //!< Reserved bit
     
-    // Bookkeeping
-    SESSION_FLAGS_MASK                = 0x0F
+    // Book keeping
+    SESSION_FLAGS_MASK                = 0x0F  //!< Bit mask to query the session flags
 } E_SESSION_FLAGS;
 
+
+
+/*! \class HdlcdSessionDescriptor
+ *  \brief Class HdlcdSessionDescriptor
+ * 
+ *  This is a convenience class to assemble the service access point specifier byte (SAP) of the HDLCd access protocol.
+ *  The use of enums allows a human-readable specification of sessions.
+ */
 class HdlcdSessionDescriptor {
 public:   
-    // CTORs
+    /*! \brief  The constructor of HdlcdSessionDescriptor objects
+     * 
+     *  This constructor is used to assemble the service access point specifier as a combination of enums
+     * 
+     *  \param  a_eSessionType the session type enum
+     *  \param  a_SessionFlags a combination of E_SESSION_FLAGS enums
+     */
     HdlcdSessionDescriptor(E_SESSION_TYPE a_eSessionType, uint8_t a_SessionFlags): m_ServiceAccessPointSpecifier(a_eSessionType | a_SessionFlags) {
         // Checks
         if (((a_eSessionType & SESSION_TYPE_MASK) >= SESSION_TYPE_ARITHMETIC_ENDMARKER) ||
@@ -82,6 +109,12 @@ public:
         } // if
     }
     
+    /*! \brief  The constructor of HdlcdSessionDescriptor objects
+     * 
+     *  This constructor is used to parse the service access point specifier using the assembled octett
+     * 
+     *  \param  a_ServiceAccessPointSpecifier the service access point specifier octett
+     */
     explicit HdlcdSessionDescriptor(uint8_t a_ServiceAccessPointSpecifier): m_ServiceAccessPointSpecifier(a_ServiceAccessPointSpecifier) {
         // Checks
         if ((m_ServiceAccessPointSpecifier & SESSION_TYPE_MASK) >= SESSION_TYPE_ARITHMETIC_ENDMARKER) {
@@ -90,29 +123,55 @@ public:
         } // if
     }
     
-    // Getter
+    /*! \brief  Query the service access point specifier octett
+     * 
+     *  \return uint8_t the service access point specifier octett
+     */
     operator uint8_t() const {
         return m_ServiceAccessPointSpecifier;
     }
-    
+
+    /*! \brief  Query the session type
+     * 
+     *  \return E_SESSION_TYPE the session type enum
+     */
     E_SESSION_TYPE GetSessionType() const {
         return E_SESSION_TYPE(m_ServiceAccessPointSpecifier & SESSION_TYPE_MASK);
     }
 
+    /*! \brief  Query whether data packets sent by a device to the HDLCd should be delivered
+     * 
+     *  \retval true data packets received from the HDLCd should be delivered
+     *  \retval false data packets received from the HDLCd should be ignored
+     *  \return bool indicates whether data packets received from the HDLCd should be delivered or ignored
+     */
     bool DeliversRcvdData() const {
         return (m_ServiceAccessPointSpecifier & SESSION_FLAGS_DELIVER_RCVD);
     }
 
+    /*! \brief  Query whether data packets sent by the HDLCd to a device should be delivered
+     * 
+     *  \retval true data packets sent to a device should be delivered
+     *  \retval false data packets sent to a device should be ignored
+     *  \return bool indicates whether data packets sent to a device should be delivered or ignored
+     */
     bool DeliversSentData() const {
         return (m_ServiceAccessPointSpecifier & SESSION_FLAGS_DELIVER_SENT);
     }
 
+    /*! \brief  Query whether invalid data packets with a broken CRC checksum should be delivered
+     * 
+     *  \retval true invalid data packets with a broken CRC checksum should be delivered
+     *  \retval false invalid data packets with a broken CRC checksum should be ignored
+     *  \return bool indicates whether invalid data packets with a broken CRC checksum should be delivered or ignored
+     */
     bool DeliversInvalidData() const {
         return (m_ServiceAccessPointSpecifier & SESSION_FLAGS_DELIVER_INVALIDS);
     }
 
 private:
-    uint8_t m_ServiceAccessPointSpecifier;
+    // Internal members
+    uint8_t m_ServiceAccessPointSpecifier; //!< The service access point specifier octett
 };
 
 #endif // HDLCD_SESSION_DESCRIPTOR_H

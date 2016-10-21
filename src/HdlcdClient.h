@@ -61,8 +61,6 @@ class HdlcdClient {
 public:
     /*! \brief  The constructor of HdlcdClient objects
      * 
-     *  The constructor of HdlcdClient objects
-     * 
      *  \param  a_IOService the boost IOService object
      *  \param  a_SerialPortName the name of the serial port device
      *  \param  a_HdlcdSessionDescriptor the indentifier of the session, see "service access point"
@@ -79,8 +77,6 @@ public:
     }
     
     /*! \brief  Perform an asynchronous connect procedure regarding both TCP sockets
-     * 
-     *  Perform an asynchronous connect procedure regarding both TCP sockets
      * 
      *  \param  a_EndpointIterator the boost endpoint iteratior referring to the destination
      *  \param  a_OnConnectedCallback the callback to be called if a result is available.
