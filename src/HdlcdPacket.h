@@ -1,6 +1,8 @@
 /**
  * \file      HdlcdPacket.h
- * \brief 
+ * \brief     This file contains the header declaration of class HdlcdPacket
+ * \author    Florian Evers, florian-evers@gmx.de
+ * \copyright BSD 3 Clause licence
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
  * All rights reserved.
@@ -39,12 +41,26 @@
 
 #include "Frame.h"
 
+/*! enum E_HDLCD_PACKET
+ *  \brief The enum E_HDLCD_PACKET
+ * 
+ *  This enum specifies the set of packet types of the HDLCd access protocol. Each of them is represented
+ *  by a specific derived class of base class HdlcdPacket.
+ */
 typedef enum {
-    HDLCD_PACKET_DATA    = 0x00,
-    HDLCD_PACKET_CTRL    = 0x10,
-    HDLCD_PACKET_UNKNOWN = 0xFF,
+    HDLCD_PACKET_DATA    = 0x00, //!< A data packet of the HDLCd access protocol
+    HDLCD_PACKET_CTRL    = 0x10, //!< A control packet of the HDLCd access protocol
+    HDLCD_PACKET_UNKNOWN = 0xFF, //!< Unknown packet type
 } E_HDLCD_PACKET;
 
+
+
+/*! \class HdlcdPacket
+ *  \brief Class HdlcdPacket
+ * 
+ *  This is the base class for all packet types of the HDLCd access protocol. This base class inherits from
+ *  the Frame class and thus allows easy exchange via FrameEndpoint entities.
+ */
 class HdlcdPacket: public Frame {
 public:
     virtual E_HDLCD_PACKET GetHdlcdPacketType() const { return HDLCD_PACKET_UNKNOWN; }

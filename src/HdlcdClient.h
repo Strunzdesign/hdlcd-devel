@@ -1,6 +1,8 @@
 /**
  * \file      HdlcdClient.h
- * \brief 
+ * \brief     This file contains the header declaration of class HdlcdClient
+ * \author    Florian Evers, florian-evers@gmx.de
+ * \copyright BSD 3 Clause licence
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
  * All rights reserved.
@@ -49,17 +51,21 @@
 /*! \class HdlcdClient
  *  \brief Class HdlcdClient
  * 
- *  The main helper class to easily implement clients of the HDLCd access protocol
+ *  The main helper class to easily implement clients of the HDLCd access protocol. It implements the HDLCd access protocol
+ *  and makes use of two TCP sockets: one TCP socket is dedicated to the exchange of user data, the second solely to the exchange
+ *  of control packets. However, all the socket handling is performed internally and is not visible to the user of this class.
+ *  
+ *  This class provides an asynchronous interface, but it can also be used in a quasi-synchronous way.
  */
 class HdlcdClient {
 public:
-    /*! \brief The constructor of HdlcdClient objects
+    /*! \brief  The constructor of HdlcdClient objects
      * 
      *  The constructor of HdlcdClient objects
      * 
-     *  \param a_IOService the boost IOService object
-     *  \param a_SerialPortName the name of the serial port device
-     *  \param a_HdlcdSessionDescriptor the indentifier of the session, see "service access point"
+     *  \param  a_IOService the boost IOService object
+     *  \param  a_SerialPortName the name of the serial port device
+     *  \param  a_HdlcdSessionDescriptor the indentifier of the session, see "service access point"
      */
     HdlcdClient(boost::asio::io_service& a_IOService, const std::string &a_SerialPortName, HdlcdSessionDescriptor a_HdlcdSessionDescriptor):
         m_IOService(a_IOService),
@@ -72,12 +78,12 @@ public:
         m_eTcpSocketCtrlState(SOCKET_STATE_ERROR) {
     }
     
-    /*! \brief Perform an asynchronous connect procedure regarding both TCP sockets
+    /*! \brief  Perform an asynchronous connect procedure regarding both TCP sockets
      * 
      *  Perform an asynchronous connect procedure regarding both TCP sockets
      * 
-     *  \param a_EndpointIterator the boost endpoint iteratior referring to the destination
-     *  \param a_OnConnectedCallback the callback to be called if a result is available.
+     *  \param  a_EndpointIterator the boost endpoint iteratior referring to the destination
+     *  \param  a_OnConnectedCallback the callback to be called if a result is available.
      */
     void AsyncConnect(boost::asio::ip::tcp::resolver::iterator a_EndpointIterator, std::function<void(bool a_bSuccess)> a_OnConnectedCallback) {
         // Checks
@@ -109,7 +115,7 @@ public:
         });
     }
 
-    /*! \brief The destructor of HdlcdClient objects
+    /*! \brief  The destructor of HdlcdClient objects
      * 
      *  All open connections will automatically be closed by the destructor
      */
@@ -120,7 +126,7 @@ public:
         Close();
     }
 
-    /*! \brief Shuts all TCP connections down
+    /*! \brief  Shuts all TCP connections down
      * 
      *  Initiates a shutdown procedure for correct teardown of all TCP connections
      */
@@ -134,7 +140,7 @@ public:
         } // if
     }
 
-    /*! \brief Close the client entity
+    /*! \brief  Close the client entity
      * 
      *  Close the client entity and all its TCP connections
      */
@@ -163,42 +169,46 @@ public:
         } // if
     }
     
-    /*! \brief Provide a callback method to be called for received data packets
+    /*! \brief  Provide a callback method to be called for received data packets
      * 
      *  Data packets are received in an asynchronous way. Use this method to specify a callback method to be called on reception of single data packets
      * 
-     *  \param a_OnDataCallback the funtion pointer to the callback method, may be an empty function pointer to remove the callback
+     *  \param  a_OnDataCallback the funtion pointer to the callback method, may be an empty function pointer to remove the callback
      */
     void SetOnDataCallback(std::function<void(const HdlcdPacketData& a_PacketData)> a_OnDataCallback) {
         m_OnDataCallback = a_OnDataCallback;
     }
     
-    /*! \brief Provide a callback method to be called for received control packets
+    /*! \brief  Provide a callback method to be called for received control packets
      * 
      *  Control packets are received in an asynchronous way. Use this method to specify a callback method to be called on reception of single control packets
      * 
-     *  \param a_OnCtrlCallback the funtion pointer to the callback method, may be an empty function pointer to remove the callback
+     *  \param  a_OnCtrlCallback the funtion pointer to the callback method, may be an empty function pointer to remove the callback
      */
     void SetOnCtrlCallback(std::function<void(const HdlcdPacketCtrl& a_PacketCtrl)> a_OnCtrlCallback) {
         m_OnCtrlCallback = a_OnCtrlCallback;
     }
     
-    /*! \brief Provide a callback method to be called if this client entity is closing
+    /*! \brief  Provide a callback method to be called if this client entity is closing
      * 
      *  This method can be used to provide a function pointer callback to be called if this entoty is closing, e.g., the peer closed its endpoint
      * 
-     *  \param a_OnClosedCallback the funtion pointer to the callback method, may be an empty function pointer to remove the callback
+     *  \param  a_OnClosedCallback the funtion pointer to the callback method, may be an empty function pointer to remove the callback
      */
     void SetOnClosedCallback(std::function<void()> a_OnClosedCallback) {
         m_OnClosedCallback = a_OnClosedCallback;
     }
     
-    /*! \brief Send a single data packet to the peer entity
+    /*! \brief  Send a single data packet to the peer entity
      * 
-     *  Send a single data packet to the peer entity
+     *  Send a single data packet to the peer entity. Due to the asynchronous mode the data packet is enqueued for later transmission.
      * 
-     *  \param a_PacketData the data packet to be transmitted
-     *  \param a_OnSendDoneCallback the callback handler to be called if the provided data packet was sent (optional)
+     *  \param  a_PacketData the data packet to be transmitted
+     *  \param  a_OnSendDoneCallback the callback handler to be called if the provided data packet was sent (optional)
+     * 
+     *  \retval true the data packet was enqueued for transmission
+     *  \retval false the data packet was not enqueued, e.g., the send queue was full or a problem with one of the sockets occured
+     *  \return bool indicates whether the provided data packet was successfully enqueued for transmitted
      */
     bool Send(const HdlcdPacketData& a_PacketData, std::function<void()> a_OnSendDoneCallback = nullptr) {
         bool l_bRetVal = false;
@@ -213,12 +223,16 @@ public:
         return l_bRetVal;
     }
 
-    /*! \brief Send a single control packet to the peer entity
+    /*! \brief  Send a single control packet to the peer entity
      * 
-     *  Send a single control packet to the peer entity
+     *  Send a single control packet to the peer entity. Due to the asynchronous mode the control packet is enqueued for later transmission.
      * 
-     *  \param a_PacketCtrl the control packet to be transmitted
-     *  \param a_OnSendDoneCallback the callback handler to be called if the provided control packet was sent (optional)
+     *  \param  a_PacketCtrl the control packet to be transmitted
+     *  \param  a_OnSendDoneCallback the callback handler to be called if the provided control packet was sent (optional)
+     * 
+     *  \retval true the control packet was enqueued for transmission
+     *  \retval false the control packet was not enqueued, e.g., the send queue was full or a problem with one of the sockets occured
+     *  \return bool indicates whether the provided control packet was successfully enqueued for transmitted
      */
     bool Send(const HdlcdPacketCtrl& a_PacketCtrl, std::function<void()> a_OnSendDoneCallback = nullptr) {
         bool l_bRetVal = false;
@@ -234,11 +248,11 @@ public:
     }
     
 private:
-    /*! \brief Indicate that the data socket was established or that an error occured
+    /*! \brief  Indicate that the data socket was established or that an error occured
      * 
      *  Internal helper: indicate that the data socket was established or that an error occured
      * 
-     *  \param l_bSuccess to indicate whether the data socket was successfully connected or not
+     *  \param  l_bSuccess to indicate whether the data socket was successfully connected or not
      */
     void OnTcpSocketDataConnected(bool l_bSuccess) {
         // Checks
@@ -252,11 +266,11 @@ private:
         OnTcpSocketConnected();
     }
 
-    /*! \brief Indicate that the control socket was established or that an error occured
+    /*! \brief  Indicate that the control socket was established or that an error occured
      * 
      *  Internal helper: indicate that the control socket was established or that an error occured
      * 
-     *  \param l_bSuccess to indicate whether the control socket was successfully connected or not
+     *  \param  l_bSuccess to indicate whether the control socket was successfully connected or not
      */
     void OnTcpSocketCtrlConnected(bool l_bSuccess) {
         // Checks
@@ -270,7 +284,7 @@ private:
         OnTcpSocketConnected();
     }
     
-    /*! \brief Indicate that one of both sockets were connetced or that an error happened
+    /*! \brief  Indicate that one of both sockets were connetced or that an error happened
      * 
      *  Internal helper: if a status regarding both sockets is available trigger the callback and maybe start subsequent activity
      */
@@ -332,25 +346,30 @@ private:
         return;
     }
     
-    /*! \brief Internal callback method to be called on reception of data packets
+    /*! \brief  Internal callback method to be called on reception of data packets
      * 
      *  This is an internal callback method to be called on reception of data packets
      * 
-     *  \param a_PacketData the received data packet
+     *  \param  a_PacketData the received data packet
+     * 
+     *  \retval true demand for delivey of subsequent packets
+     *  \retval false no subsequent packets must be delivered before the next explicit poll
+     *  \return bool indicates whether the receiver should be stalled
      */
     bool OnDataReceived(std::shared_ptr<const HdlcdPacketData> a_PacketData) {
         if (m_OnDataCallback) {
             m_OnDataCallback(*(a_PacketData.get()));
         } // if
         
+        /// \todo Implement asynchronous behavior: the receiver must be stalled
         return true; // Do not stall the receiver
     }
 
-    /*! \brief Internal callback method to be called on reception of control packets
+    /*! \brief  Internal callback method to be called on reception of control packets
      * 
      *  This is an internal callback method to be called on reception of control packets
      * 
-     *  \param a_PacketCtrl the received data packet
+     *  \param  a_PacketCtrl the received data packet
      */
     void OnCtrlReceived(const HdlcdPacketCtrl& a_PacketCtrl) {
         if (m_OnCtrlCallback) {
@@ -358,7 +377,7 @@ private:
         } // if
     }
 
-    /*! \brief Internal callback method to be called on close of one of the TCP sockets
+    /*! \brief  Internal callback method to be called on close of one of the TCP sockets
      * 
      *  This is an internal callback method to be called on close of one of the TCP sockets
      */
@@ -368,7 +387,7 @@ private:
     
     // Members
     boost::asio::io_service& m_IOService; //!< The boost IOService object
-    const std::string m_SerialPortName; //!< The name of the serial port to connect to a device
+    const std::string m_SerialPortName;   //!< The name of the serial port to connect to a device
     const HdlcdSessionDescriptor m_HdlcdSessionDescriptor; //!< The service access point specifier regarding the protocol specification
     bool m_bClosed; //!< Indicates whether the HDLCd access protocol entity has already been closed
     
