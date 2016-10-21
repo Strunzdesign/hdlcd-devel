@@ -41,8 +41,8 @@
 
 #include <stdint.h>
 
-/*! enum E_SESSION_TYPE
- *  \brief The enum E_SESSION_TYPE
+/*! \enum E_SESSION_TYPE
+ *  \brief The enum E_SESSION_TYPE to specify all possible session types
  * 
  *  This enum specifies the set of available session types according to the HDLCd access protocol.
  */
@@ -61,8 +61,8 @@ typedef enum {
 
 
 
-/*! enum E_SESSION_FLAGS
- *  \brief The enum E_SESSION_FLAGS
+/*! \enum E_SESSION_FLAGS
+ *  \brief The enum E_SESSION_FLAGS to specify all possible session flags
  * 
  *  This enum specifies the set of available session flags according to the HDLCd access protocol.
  *  Multiple combination of flags are possible

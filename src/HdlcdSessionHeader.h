@@ -1,6 +1,8 @@
 /**
  * \file      HdlcdSessionHeader.h
- * \brief 
+ * \brief     This file contains the header declaration of class HdlcdSessionHeader
+ * \author    Florian Evers, florian-evers@gmx.de
+ * \copyright BSD 3 Clause licence
  *
  * Copyright (c) 2016, Florian Evers, florian-evers@gmx.de
  * All rights reserved.
@@ -42,8 +44,21 @@
 #include <string>
 #include "HdlcdSessionDescriptor.h"
 
+/*! \class HdlcdSessionHeader
+ *  \brief Class HdlcdSessionHeader
+ * 
+ *  This class implements the session header as specified in the HDLCd access protocol. It inherits from
+ *  the Frame class and thus allows easy exchange via FrameEndpoint entities.
+ */
 class HdlcdSessionHeader: public Frame {
 public:
+    /*! \brief  Static creator to create an object in the process of transmission
+     *
+     *  \param  a_HdlcdSessionDescriptor the service access point specifier octett
+     *  \param  a_SerialPortName the file name of the serial port
+     * 
+     *  \return HdlcdSessionHeader the created HDLCd session header object
+     */
     static HdlcdSessionHeader Create(HdlcdSessionDescriptor a_HdlcdSessionDescriptor, const std::string& a_SerialPortName) {
         // Called for transmission
         HdlcdSessionHeader l_HdlcdSessionHeader;
@@ -52,6 +67,10 @@ public:
         return l_HdlcdSessionHeader;
     }
 
+    /*! \brief  Static creator to create an object in the process of reception
+     * 
+     *  \return std::shared_ptr<HdlcdSessionHeader> the created but empty HDLCd session header object
+     */
     static std::shared_ptr<HdlcdSessionHeader> CreateDeserializedFrame() {
         // Called on reception
         auto l_HdlcdSessionHeader(std::shared_ptr<HdlcdSessionHeader>(new HdlcdSessionHeader));
@@ -60,23 +79,38 @@ public:
         return l_HdlcdSessionHeader;
     }
     
-    // Getter
+    /*! \brief  Query the service access point specifier octett
+     * 
+     *  \return uint8_t the service access point specifier octett
+     */
     uint8_t GetServiceAccessPointSpecifier() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
         return m_ServiceAccessPointSpecifier;
     }
 
+    /*! \brief  Query the file name of the serial port
+     * 
+     *  \return const std::string& the file name of the serial port
+     */
     const std::string& GetSerialPortName() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
         return m_SerialPortName;
     }
 
 private:
-    // Private CTOR
+    /*! \brief  The default constructor
+     * 
+     *  The default constructor is private. To create an object one has to use one of the static creator methods
+     */
     HdlcdSessionHeader(): m_ServiceAccessPointSpecifier(0x00), m_eDeserialize(DESERIALIZE_FULL) {
     }
 
-    // Serializer
+    /*! \brief  The serializer
+     * 
+     *  The serializer creates a buffer of bytes containing the assembled HDLCd session header ready for transmission
+     * 
+     *  \return std::vector<unsigned char> the buffer of bytes containing the assembled HDLCd session header
+     */
     const std::vector<unsigned char> Serialize() const {
         assert(m_eDeserialize == DESERIALIZE_FULL);
         std::vector<unsigned char> l_Buffer;
@@ -87,7 +121,14 @@ private:
         return l_Buffer;
     }
 
-    // Deserializer
+    /*! \brief  The deserializer
+     * 
+     *  The deserializer consumes and parses all collected bytes
+     * 
+     *  \retval true no error occured
+     *  \retval false a protocol violation was detected
+     *  \return bool to indicate whether parsing the available bytes succeeded
+     */
     bool Deserialize() {
         // All requested bytes are available
         switch (m_eDeserialize) {
@@ -131,16 +172,20 @@ private:
         return true;
     }
     
-    // Members
-    uint8_t m_ServiceAccessPointSpecifier;
-    std::string m_SerialPortName;
+    // Internal members
+    uint8_t m_ServiceAccessPointSpecifier; //!< The service access point specifier octett
+    std::string m_SerialPortName;          //!< The file name of the serial port
+    
+    /*! \enum E_DESERIALIZE
+     *  \brief The enum E_DESERIALIZE to specify the progress of deserialization
+     */
     typedef enum {
-        DESERIALIZE_ERROR  = 0,
-        DESERIALIZE_HEADER = 1,
-        DESERIALIZE_BODY   = 2,
-        DESERIALIZE_FULL   = 3
+        DESERIALIZE_ERROR  = 0,            //!< An error occured
+        DESERIALIZE_HEADER = 1,            //!< Currently the header of the HDLCd session header is deserialized
+        DESERIALIZE_BODY   = 2,            //!< Currently the body of the HDLCd session header is deserialized
+        DESERIALIZE_FULL   = 3             //!< The HDLCd session header is complete
     } E_DESERIALIZE;
-    E_DESERIALIZE m_eDeserialize;
+    E_DESERIALIZE m_eDeserialize;          //!< The state in the progress of deserialization
 };
 
 #endif // HDLCD_SESSION_HEADER_H

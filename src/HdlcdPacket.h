@@ -41,8 +41,8 @@
 
 #include "Frame.h"
 
-/*! enum E_HDLCD_PACKET
- *  \brief The enum E_HDLCD_PACKET
+/*! \enum E_HDLCD_PACKET
+ *  \brief The enum E_HDLCD_PACKET to specify all possible HDLCd packet types
  * 
  *  This enum specifies the set of packet types of the HDLCd access protocol. Each of them is represented
  *  by a specific derived class of base class HdlcdPacket.
