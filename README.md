@@ -5,8 +5,7 @@ This software is intended to be portable and makes use of the boost libraries. I
 and Microsoft Windows (nuwen MinGW).
 
 ## Latest stable release of the HDLCd header files:
-- v1.0 from 06.10.2016
-  - First tested version without any open issues
+- v1.1 from 22.11.2016
 
 ## Required libraries and tools:
 - None. This repository does only contain C++ header files
