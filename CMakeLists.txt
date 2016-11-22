@@ -4,7 +4,7 @@ project(hdlcd-devel)
 
 # Automatically set the version number
 set(HDLCD_DEVEL_VERSION_MAJOR  \"1\")
-set(HDLCD_DEVEL_VERSION_MINOR  \"1\")
+set(HDLCD_DEVEL_VERSION_MINOR  \"2pre\")
 include_directories("${PROJECT_BINARY_DIR}/libs/framing/src")
 configure_file (
     "${PROJECT_SOURCE_DIR}/src/HdlcdConfig.h.in"
